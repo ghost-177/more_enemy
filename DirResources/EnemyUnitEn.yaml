@@ -1,0 +1,7 @@
+SampleCharacterMod:
+  Title: 'Test'
+  Move:
+  - 'Attack a'
+  - 'Attack b'
+  - 'Attack c'
+  - 'Attack d'

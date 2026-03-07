@@ -1,0 +1,15 @@
+SampleCharacterUltA:
+  Title: Title
+  Content: Ultimate A 
+  Description: |-
+    Deal {Damage} damage.
+    |Accurate|
+
+SampleCharacterUltB:
+  Title: Title
+  Content: Ultimate B
+  Description: |-
+    Deal {Damage} damage.
+    Apply {Value1} |Weak|.
+    |Accurate|
+

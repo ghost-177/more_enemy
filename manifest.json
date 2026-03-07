@@ -1,0 +1,7 @@
+{
+  "name": "SampleCharacterMod",
+  "version_number": "0.0.1",
+  "website_url": "https://gitlab.com/rmrfmaxxc1/lbol_sample_character_mod",
+  "description": "Add sample character mod as a playable character.",
+  "dependencies": [ "BepInEx-BepInExPack-5.4.2100", "TeamNeo-Sideloader-0.9.7601"]
+}
