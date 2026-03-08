@@ -509,6 +509,12 @@
         <Reference Include="UnityEngine.ImageConversionModule">
             <HintPath>$(GameFolder)\LBoL_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
         </Reference>
+        <Reference Include="UnityEngine.IMGUIModule">
+            <HintPath>$(GameFolder)\LBoL_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.TextRenderingModule">
+            <HintPath>$(GameFolder)\LBoL_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+        </Reference>
         <Reference Include="Unity.Addressables">
             <HintPath>$(GameFolder)\LBoL_Data\Managed\Unity.Addressables.dll</HintPath>
         </Reference>

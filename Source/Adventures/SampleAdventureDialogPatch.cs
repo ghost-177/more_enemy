@@ -2,80 +2,59 @@ using HarmonyLib;
 using LBoL.ConfigData;
 using LBoL.Core;
 using LBoL.Core.Adventures;
+using LBoL.Core.Cards;
 using LBoL.Core.Stations;
 using LBoL.Presentation;
+using LBoLEntitySideloader.Resource;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using UnityEngine;
 
 namespace SampleCharacterMod.Adventures
 {
     // =====================================================================
     // Harmony 补丁集合：自定义事件运行时支持
     //
-    // 架构说明（重要！）：
-    //
-    //   LBoL 事件的两个层次：
-    //     Core 层：AdventureStation.OnEnter()  — 仅通知，不控制对话
-    //     Presentation 层：GameMaster.AdventureFlow(Station) — 实际对话流程
-    //
-    //   GameMaster.AdventureFlow 是真正的入口，它负责：
-    //     1. 查找 ExtraAdventureHandlers（官方自定义 handler 机制）
-    //     2. 或启动 VnPanel.RunDialog 加载 YarnSpinner 对话
-    //
-    //   自定义 Mod 没有 .yarn 脚本文件，直接拦截 AdventureFlow，
-    //   替换为自己的协程（发放奖励 → 让外层流程自动结束站点）。
-    //
     // 补丁列表：
     //   1. Stage_Initialize_Patch
-    //      - 每幕初始化后，向 AdventureConfig._IdTable 手动注册 config（关键！）
+    //      - 手动注册 AdventureConfig 到 _IdTable（sideloader 不自动做）
     //      - 将 SampleCustomEvent 注入 Stage.AdventurePool
     //
     //   2. GameMaster_AdventureFlow_Patch
-    //      - 拦截 AdventureFlow，当当前 Adventure 是 SampleCustomEvent 时
-    //      - 替换为自定义协程：随机发放奖励后 yield break
-    //      - 外层 CoEnterStation 协程会在 AdventureFlow 结束后自动处理离站逻辑
+    //      - 拦截 AdventureFlow，替换为自定义协程
+    //      - 通过 BepinexPlugin.OnGUI 展示：背景图 + 描述文 + 4 个选项按钮
+    //      - 等待玩家点击后发放对应奖励：金币 / 治疗 / 展品 / 选卡
     //
     //   3. SampleAdventureDebugHelper
-    //      - 静态工具方法，供 F6 快捷键注入高权重事件（测试用）
+    //      - 强制注入高权重（F6 快捷键测试用）
     // =====================================================================
 
     // -----------------------------------------------------------------
-    // 补丁 1：Stage.Initialize 后注入事件到 AdventurePool，
-    //         并手动注册 AdventureConfig（sideloader 不会自动做这件事）
+    // 补丁 1：Stage.Initialize 后注入事件 + 注册 AdventureConfig
     // -----------------------------------------------------------------
     [HarmonyPatch]
     internal static class Stage_Initialize_Patch
     {
         [HarmonyTargetMethod]
-        static MethodBase TargetMethod()
-        {
-            // Stage.Initialize 在 DoNotPublicize 列表中，须通过 AccessTools 定位
-            return AccessTools.Method(typeof(Stage), "Initialize");
-        }
+        static MethodBase TargetMethod() =>
+            AccessTools.Method(typeof(Stage), "Initialize");
 
         [HarmonyPostfix]
         static void Postfix(Stage __instance)
         {
             try
             {
-                // 步骤 1：向 AdventureConfig._IdTable 注册 config
-                //
-                // 关键背景：
-                //   AdventureConfig._IdTable 是 static Dictionary<string, AdventureConfig>
-                //   Adventure.Initialize() 从这里按 Id 查 config，找不到就抛异常崩溃
-                //   LBoLEntitySideloader 的 AdventureTemplate.Consume 不会自动写入这张表，
-                //   必须手动注入，且要在游戏尝试创建 Adventure 实例之前完成。
                 EnsureAdventureConfigRegistered();
 
-                // 步骤 2：将自定义事件类型加入 AdventurePool
-                //   实际出现概率由 SampleCustomEventWeighter.WeightFor() 控制
                 var pool = __instance.AdventurePool;
                 if (pool == null) return;
 
                 pool.Add(typeof(SampleCustomEvent), 1f);
-                BepinexPlugin.log.LogInfo("[SampleCustomEvent] 已加入 Stage.AdventurePool（第 " + __instance.Level + " 幕）");
+                BepinexPlugin.log.LogInfo("[SampleCustomEvent] 已加入 Stage.AdventurePool（第 "
+                    + __instance.Level + " 幕）");
             }
             catch (Exception e)
             {
@@ -94,26 +73,16 @@ namespace SampleCharacterMod.Adventures
             {
                 var idTableField = AccessTools.Field(typeof(AdventureConfig), "_IdTable");
                 var table = (Dictionary<string, AdventureConfig>)idTableField.GetValue(null);
-                if (table == null)
-                {
-                    BepinexPlugin.log.LogWarning("[SampleCustomEvent] AdventureConfig._IdTable 为 null");
-                    return;
-                }
+                if (table == null) return;
 
                 const string eventId = "SampleCustomEvent";
                 if (!table.ContainsKey(eventId))
                 {
-                    var config = new AdventureConfig(
-                        No: 9001,        // 自定义编号，内置事件通常 < 100，使用大值避免冲突
-                        Id: eventId,
-                        HostId: "",      // NPC 角色 ID，留空=无 NPC
-                        HostId2: "",
-                        Music: 0,        // BGM，0=使用地图默认音乐
-                        HideUlt: false,
-                        TempArt: false
-                    );
-                    table[eventId] = config;
-                    BepinexPlugin.log.LogInfo("[SampleCustomEvent] AdventureConfig 已注册到 _IdTable");
+                    table[eventId] = new AdventureConfig(
+                        No: 9001, Id: eventId,
+                        HostId: "", HostId2: "", Music: 0,
+                        HideUlt: false, TempArt: false);
+                    BepinexPlugin.log.LogInfo("[SampleCustomEvent] AdventureConfig 已注册");
                 }
             }
             catch (Exception e)
@@ -124,69 +93,78 @@ namespace SampleCharacterMod.Adventures
     }
 
     // -----------------------------------------------------------------
-    // 补丁 2：拦截 GameMaster.AdventureFlow，替换为自定义事件协程
-    //
-    // 背景：
-    //   AdventureStation.OnEnter() 是 Core 层通知，不控制对话流程。
-    //   GameMaster.AdventureFlow(Station) 才是真正控制对话的方法：
-    //     - 有 ExtraAdventureHandlers 时调用 handler（官方自定义机制）
-    //     - 否则调用 VnPanel.RunDialog(adventure.DialogName, ...) 加载 Yarn 脚本
-    //   自定义 Mod 没有 Yarn 脚本，直接拦截 AdventureFlow，
-    //   用自定义协程取代，外层 CoEnterStation 会在协程结束后自动处理后续流程。
+    // 补丁 2：拦截 GameMaster.AdventureFlow，替换为自定义协程
     // -----------------------------------------------------------------
     [HarmonyPatch]
     internal static class GameMaster_AdventureFlow_Patch
     {
         [HarmonyTargetMethod]
-        static MethodBase TargetMethod()
-        {
-            return AccessTools.Method(typeof(GameMaster), "AdventureFlow");
-        }
+        static MethodBase TargetMethod() =>
+            AccessTools.Method(typeof(GameMaster), "AdventureFlow");
 
         [HarmonyPrefix]
         static bool Prefix(GameMaster __instance, Station station, ref IEnumerator __result)
         {
-            // 只拦截 AdventureStation 且 Adventure 是自定义事件的情况
             if (!(station is AdventureStation advStation)) return true;
             if (!(advStation.Adventure is SampleCustomEvent customAdv)) return true;
 
-            // 用自定义协程替换原始返回值
             __result = CustomAdventureFlow(advStation, customAdv);
-            return false; // 跳过原始 AdventureFlow（不启动对话流程）
+            return false;
         }
 
-        // 自定义事件流程协程
+        // ----------------------------------------------------------------
+        // 自定义事件主协程
         //
-        // 执行顺序（由外层 CoEnterStation 协程驱动）：
-        //   CoEnterStation → AdventureFlow（我们接管） → 发放奖励 → yield break
-        //   → CoEnterStation 继续 → EndStationFlow（游戏自动处理离站动画等）
+        // 流程：
+        //   1. 加载背景图（嵌入 PNG）
+        //   2. 设置描述文本 + 选项，触发 BepinexPlugin.OnGUI 展示界面
+        //   3. 每帧 yield return null，等待玩家点击选项按钮
+        //   4. 根据 pendingChoiceResult 发放对应奖励
+        //   5. 清理状态，yield break → 外层 CoEnterStation 自动处理离站
+        // ----------------------------------------------------------------
         static IEnumerator CustomAdventureFlow(AdventureStation station, SampleCustomEvent adventure)
         {
             BepinexPlugin.log.LogInfo("[SampleCustomEvent] 「神秘旅行者的礼物」已触发！");
 
-            try
-            {
-                // 随机发放三种奖励之一
-                var rng = adventure.GameRun?.AdventureRng;
-                float roll = rng != null
-                    ? rng.NextFloat()
-                    : (float)new System.Random().NextDouble();
+            // --- 步骤 1：加载背景图 ---
+            TryLoadBackground();
 
-                if (roll < 0.33f)
-                {
-                    // 奖励 A：金币
+            // --- 步骤 2：准备事件描述 & 选项 ---
+            BepinexPlugin.pendingChoiceDescription =
+                "A mysterious traveler appears before you on the road.\n" +
+                "\"Greetings, adventurer. I have something for you—choose wisely.\"";
+
+            BepinexPlugin.pendingChoiceOptions = new string[]
+            {
+                $"[Gold]    Accept the coin purse  (+{SampleCustomEvent.MoneyReward} Gold)",
+                $"[Heal]    Drink the healing potion  (Recover {SampleCustomEvent.HealPercent}% Max HP)",
+                "[Exhibit] Receive a mysterious relic  (Gain a random Exhibit)",
+                $"[Cards]   Browse the card collection  (Choose 1 of {SampleCustomEvent.CardOfferCount} Cards)",
+            };
+            BepinexPlugin.pendingChoiceResult = -1;
+
+            // --- 步骤 3：等待玩家选择 ---
+            while (BepinexPlugin.pendingChoiceResult < 0)
+                yield return null;
+
+            int choice = BepinexPlugin.pendingChoiceResult;
+
+            // 彻底清理 IMGUI 状态
+            BepinexPlugin.pendingChoiceOptions = null;
+            BepinexPlugin.pendingChoiceDescription = null;
+            BepinexPlugin.pendingChoiceBackground = null;
+
+            BepinexPlugin.log.LogInfo($"[SampleCustomEvent] 玩家选择了选项 {choice}");
+
+            // --- 步骤 4：发放奖励 ---
+            switch (choice)
+            {
+                case 0: // 金币
                     adventure.GainMoney(SampleCustomEvent.MoneyReward);
                     BepinexPlugin.log.LogInfo($"[SampleCustomEvent] 奖励：{SampleCustomEvent.MoneyReward} 金币");
-                }
-                else if (roll < 0.66f)
-                {
-                    // 奖励 B：少量金币（卡牌升级的简化版，完整实现需要协程+UI）
-                    adventure.GainMoney(SampleCustomEvent.MoneyReward / 2);
-                    BepinexPlugin.log.LogInfo("[SampleCustomEvent] 奖励：40 金币（卡牌升级简化）");
-                }
-                else
-                {
-                    // 奖励 C：恢复 HP（最大 HP 的 HealPercent%）
+                    break;
+
+                case 1: // 治疗
                     var player = adventure.GameRun?.Player;
                     if (player != null)
                     {
@@ -194,26 +172,283 @@ namespace SampleCharacterMod.Adventures
                         adventure.Heal(healAmt, "SampleCustomEvent");
                         BepinexPlugin.log.LogInfo($"[SampleCustomEvent] 奖励：恢复 {healAmt} HP");
                     }
+                    break;
+
+                case 2: // 随机展品
+                    foreach (var step in GainRandomExhibit(adventure))
+                        yield return step;
+                    break;
+
+                case 3: // 选卡（从若干随机卡中选 1）
+                    foreach (var step in SelectRandomCards(adventure))
+                        yield return step;
+                    break;
+            }
+
+            // yield break → 外层 CoEnterStation 自动调用 EndStationFlow 处理离站
+        }
+
+        // ----------------------------------------------------------------
+        // 奖励 C：随机展品
+        //
+        // 1. 通过 AccessTools 调用 Stage.RollExhibitInAdventure()
+        //    （DoNotPublicize 列表，必须反射调用）
+        // 2. 调用 GameRunController.TryCreateExhibit(Type) 创建展品实例
+        // 3. 调用 GameRunController.GainExhibitInstantly(Exhibit) 立即获取
+        //
+        // Library（EnumerateRollableExhibitTypes）是虚属性被 Publicizer 排除，
+        // 因此用 AccessTools 访问。
+        // ----------------------------------------------------------------
+        static IEnumerable GainRandomExhibit(SampleCustomEvent adventure)
+        {
+            Type exhibitType = null;
+
+            // 优先用 Stage.RollExhibitInAdventure（DoNotPublicize）
+            try
+            {
+                var stage = adventure.GameRun?.CurrentStage;
+                if (stage != null)
+                {
+                    var rollMethod = AccessTools.Method(typeof(Stage), "RollExhibitInAdventure");
+                    exhibitType = rollMethod?.Invoke(stage, null) as Type;
                 }
             }
             catch (Exception e)
             {
-                BepinexPlugin.log.LogWarning("[SampleCustomEvent] 奖励发放异常: " + e.Message);
+                BepinexPlugin.log.LogWarning("[SampleCustomEvent] RollExhibitInAdventure 失败: " + e.Message);
             }
 
-            // 协程结束，外层 CoEnterStation 会自动接管离站流程
+            // 回退：从 Library 可滚展品中随机取一个
+            if (exhibitType == null)
+            {
+                try
+                {
+                    var library = GetLibrary(adventure.GameRun);
+                    if (library != null)
+                    {
+                        var enumMethod = AccessTools.Method(library.GetType(), "EnumerateRollableExhibitTypes");
+                        var types = enumMethod?.Invoke(library, null) as IEnumerable<Type>;
+                        exhibitType = types?.OrderBy(_ => UnityEngine.Random.Range(0, 10000)).FirstOrDefault();
+                    }
+                }
+                catch (Exception e)
+                {
+                    BepinexPlugin.log.LogWarning("[SampleCustomEvent] EnumerateRollableExhibitTypes 失败: " + e.Message);
+                }
+            }
+
+            if (exhibitType != null)
+            {
+                BepinexPlugin.log.LogInfo($"[SampleCustomEvent] 奖励展品：{exhibitType.Name}");
+                try
+                {
+                    // TryCreateExhibit 和 GainExhibitInstantly 均为虚方法，被 Publicizer 排除
+                    // 必须通过 AccessTools 反射调用
+                    var gameRun = adventure.GameRun;
+                    var tryCreateExhibit = AccessTools.Method(gameRun.GetType(), "TryCreateExhibit");
+                    var exhibit = tryCreateExhibit?.Invoke(gameRun, new object[] { exhibitType });
+                    if (exhibit != null)
+                    {
+                        var gainInstantly = AccessTools.Method(gameRun.GetType(), "GainExhibitInstantly");
+                        gainInstantly?.Invoke(gameRun, new object[] { exhibit });
+                    }
+                    else
+                    {
+                        BepinexPlugin.log.LogWarning("[SampleCustomEvent] TryCreateExhibit 返回 null");
+                        adventure.GainMoney(SampleCustomEvent.MoneyReward / 2);
+                    }
+                }
+                catch (Exception e)
+                {
+                    BepinexPlugin.log.LogWarning("[SampleCustomEvent] 获取展品异常: " + e.Message);
+                    adventure.GainMoney(SampleCustomEvent.MoneyReward / 2);
+                }
+            }
+            else
+            {
+                BepinexPlugin.log.LogWarning("[SampleCustomEvent] 无法获取展品，改发 40 金币");
+                adventure.GainMoney(SampleCustomEvent.MoneyReward / 2);
+            }
+
             yield break;
+        }
+
+        // ----------------------------------------------------------------
+        // 奖励 D：从若干随机卡中选 1 张加入牌库
+        //
+        // 1. 通过 Library.EnumerateRollableCardTypes() 获取可滚卡牌类型
+        //    （Library 是虚属性，用 AccessTools 访问）
+        // 2. 随机取 CardOfferCount 张，调用 GameRunController.TryCreateCard 创建实例
+        // 3. 调用 GameRunController.SelectCards(IEnumerable<Card>) 展示选卡界面
+        //    （GameRunController 上的公有 SelectCards，带原生选卡 UI）
+        // ----------------------------------------------------------------
+        static IEnumerable SelectRandomCards(SampleCustomEvent adventure)
+        {
+            // 步骤 1：获取随机卡牌类型
+            List<Type> cardTypes = null;
+            try
+            {
+                var library = GetLibrary(adventure.GameRun);
+                if (library != null)
+                {
+                    var enumMethod = AccessTools.Method(library.GetType(), "EnumerateRollableCardTypes");
+                    var types = enumMethod?.Invoke(library, null) as IEnumerable<Type>;
+                    cardTypes = types?
+                        .OrderBy(_ => UnityEngine.Random.Range(0, 10000))
+                        .Take(SampleCustomEvent.CardOfferCount)
+                        .ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                BepinexPlugin.log.LogWarning("[SampleCustomEvent] EnumerateRollableCardTypes 失败: " + e.Message);
+            }
+
+            if (cardTypes == null || cardTypes.Count == 0)
+            {
+                BepinexPlugin.log.LogWarning("[SampleCustomEvent] 无法获取卡牌列表，改发 40 金币");
+                adventure.GainMoney(SampleCustomEvent.MoneyReward / 2);
+                yield break;
+            }
+
+            // 步骤 2：创建 Card 实例（TryCreateCard 是虚方法，被 Publicizer 排除，用 AccessTools）
+            var gameRun2 = adventure.GameRun;
+            var tryCreateCard = AccessTools.Method(gameRun2.GetType(), "TryCreateCard");
+            var cards = new List<Card>();
+            foreach (var type in cardTypes)
+            {
+                try
+                {
+                    var card = tryCreateCard?.Invoke(gameRun2, new object[] { type }) as Card;
+                    if (card != null)
+                        cards.Add(card);
+                }
+                catch (Exception e)
+                {
+                    BepinexPlugin.log.LogWarning($"[SampleCustomEvent] TryCreateCard({type.Name}) 失败: " + e.Message);
+                }
+            }
+
+            if (cards.Count == 0)
+            {
+                BepinexPlugin.log.LogWarning("[SampleCustomEvent] 没有成功创建任何卡牌，改发 40 金币");
+                adventure.GainMoney(SampleCustomEvent.MoneyReward / 2);
+                yield break;
+            }
+
+            BepinexPlugin.log.LogInfo($"[SampleCustomEvent] 提供 {cards.Count} 张卡供选择");
+
+            // 步骤 3：调用 GameRunController.SelectCards 展示原生选卡 UI
+            // SelectCards 和 AddDeckCard 均为虚方法，用 AccessTools
+            var gameRun3 = adventure.GameRun;
+            var selectCardsMethod = AccessTools.Method(gameRun3.GetType(), "SelectCards");
+            IEnumerator selectCoroutine = null;
+            try
+            {
+                selectCoroutine = selectCardsMethod?.Invoke(gameRun3, new object[] { cards }) as IEnumerator;
+            }
+            catch (Exception e)
+            {
+                BepinexPlugin.log.LogWarning("[SampleCustomEvent] SelectCards 调用失败: " + e.Message);
+            }
+
+            if (selectCoroutine != null)
+            {
+                while (true)
+                {
+                    bool hasNext = false;
+                    try { hasNext = selectCoroutine.MoveNext(); }
+                    catch (Exception e)
+                    {
+                        BepinexPlugin.log.LogWarning("[SampleCustomEvent] SelectCards 执行异常: " + e.Message);
+                        break;
+                    }
+                    if (!hasNext) break;
+                    yield return selectCoroutine.Current;
+                }
+            }
+            else
+            {
+                // 如果 SelectCards 不是 IEnumerator，直接随机加一张卡作为退路
+                BepinexPlugin.log.LogWarning("[SampleCustomEvent] SelectCards 返回类型不兼容，随机加入一张卡");
+                try
+                {
+                    var addDeckCard = AccessTools.Method(gameRun3.GetType(), "AddDeckCard");
+                    addDeckCard?.Invoke(gameRun3, new object[] { cards[0] });
+                }
+                catch (Exception e)
+                {
+                    BepinexPlugin.log.LogWarning("[SampleCustomEvent] AddDeckCard 失败: " + e.Message);
+                    adventure.GainMoney(SampleCustomEvent.MoneyReward / 2);
+                }
+            }
+        }
+
+        // ----------------------------------------------------------------
+        // 辅助：获取 GameRunController.Library
+        //
+        // Library 是虚属性，被 Publicizer (IncludeVirtualMembers=false) 排除，
+        // 必须通过 AccessTools 访问。
+        // ----------------------------------------------------------------
+        static object GetLibrary(GameRunController gameRun)
+        {
+            if (gameRun == null) return null;
+            try
+            {
+                // 先尝试属性（虚属性在 publicized DLL 不可见，但 AccessTools 能找到）
+                var prop = AccessTools.Property(typeof(GameRunController), "Library");
+                if (prop != null) return prop.GetValue(gameRun);
+            }
+            catch { }
+            try
+            {
+                // 再尝试字段（backing field 命名为 "library" 小写）
+                var field = AccessTools.Field(typeof(GameRunController), "library");
+                if (field != null) return field.GetValue(gameRun);
+            }
+            catch { }
+            return null;
+        }
+
+        // ----------------------------------------------------------------
+        // 加载背景图（嵌入资源 Resources/Adventure/SampleCustomEventDef.png）
+        // ----------------------------------------------------------------
+        static Texture2D _cachedBackground = null;
+
+        static void TryLoadBackground()
+        {
+            if (_cachedBackground != null)
+            {
+                BepinexPlugin.pendingChoiceBackground = _cachedBackground;
+                return;
+            }
+
+            try
+            {
+                var sprite = ResourceLoader.LoadSprite(
+                    "Adventure/SampleCustomEventDef.png",
+                    BepinexPlugin.embeddedSource);
+
+                if (sprite != null)
+                {
+                    _cachedBackground = sprite.texture;
+                    BepinexPlugin.pendingChoiceBackground = _cachedBackground;
+                    BepinexPlugin.log.LogInfo("[SampleCustomEvent] 背景图加载成功");
+                }
+                else
+                {
+                    BepinexPlugin.log.LogWarning("[SampleCustomEvent] 背景图 Sprite 为 null");
+                }
+            }
+            catch (Exception e)
+            {
+                BepinexPlugin.log.LogWarning("[SampleCustomEvent] 背景图加载失败: " + e.Message);
+            }
         }
     }
 
     // =====================================================================
-    // 调试辅助：强制将下一个 Adventure 节点设置为自定义事件
-    //
-    // 调用方式（在 BepinexPlugin.Update() 中通过快捷键触发）：
-    //   SampleAdventureDebugHelper.ForceNextAdventure(gameRunController);
-    //
-    // 效果：以极高权重（9999f）向当前幕的 AdventurePool 注入自定义事件，
-    //       使下一个事件节点必定触发。
+    // 调试辅助：强制下一个 Adventure 节点触发自定义事件（F6 快捷键）
     // =====================================================================
     internal static class SampleAdventureDebugHelper
     {
@@ -239,7 +474,7 @@ namespace SampleCharacterMod.Adventures
                 BepinexPlugin.log.LogInfo("[SampleCustomEvent] 已以高权重注入事件池，下一个事件节点将触发。");
                 return;
             }
-  
+
             BepinexPlugin.log.LogWarning("[SampleCustomEvent] ForceNextAdventure: AdventurePool 为 null");
         }
     }

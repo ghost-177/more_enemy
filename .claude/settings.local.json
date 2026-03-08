@@ -17,7 +17,8 @@
       "Bash(powershell.exe:*)",
       "Bash(where python:*)",
       "Bash(cmd.exe:*)",
-      "Bash($bytes =:*)"
+      "Bash($bytes =:*)",
+      "Bash(/tmp/scan_exact_api.ps1:*)"
     ]
   }
 }

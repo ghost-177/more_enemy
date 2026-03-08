@@ -1,11 +1,14 @@
 # =====================================================================
-# 事件（Adventure/Gap）本地化文件
+# 事件（Adventure）本地化文件
 # 文件名规则：Adventures{语言代码}.yaml，例如 AdventuresEn.yaml（英文）
 #
-# 每个事件的 Key 为其 ID（即 SampleCustomEventDef 中 GetId() 返回的值）。
+# 每个事件的 Key 为其 Def 类名（如 SampleCustomEventDef）。
 # 字段说明：
 #   Name        - 事件标题，显示在事件界面顶部
 #   Description - 事件的叙述文本（剧情描述），支持多行
+#
+# 注意：选项文本由 C# 代码（SampleAdventureDialogPatch.cs）直接提供，
+#       不走本文件的 YAML 机制（LBoL Adventure 系统无内置选项本地化字段）。
 # =====================================================================
 
 SampleCustomEventDef:
@@ -13,4 +16,4 @@ SampleCustomEventDef:
   Description: |-
     A mysterious traveler appears before you on the road.
     "Greetings, adventurer. I have something for you—choose wisely."
-    The traveler reveals three options and awaits your decision.
+    The traveler reveals four gifts and awaits your decision.

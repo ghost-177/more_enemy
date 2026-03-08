@@ -70,17 +70,21 @@ namespace SampleCharacterMod.Adventures
     //    [EntityLogic]    将此类与上方 Def 类绑定
     //    [AdventureInfo]  注册权重控制器，控制本事件的出现概率
     //
-    //    继承 FakeAdventure 而非 Adventure：
-    //      - FakeAdventure.DialogName 返回 null，游戏不会尝试加载 Yarn 脚本
-    //      - 实际奖励逻辑由 SampleAdventureStation_Patch 在进站时注入
+    //    继承 Adventure（非 FakeAdventure，FakeAdventure 是 sealed 无法继承）
+    //    实际流程由 GameMaster_AdventureFlow_Patch 完全接管：
+    //      - 拦截 AdventureFlow，跳过 YarnSpinner 对话
+    //      - 通过 IMGUI 展示选项面板（背景图 + 描述 + 4 个按钮）
+    //      - 等待玩家点击后发放对应奖励
     // -----------------------------------------------------------------
     [AdventureInfo(WeighterType = typeof(SampleCustomEventWeighter))]
     [EntityLogic(typeof(SampleCustomEventDef))]
     public sealed class SampleCustomEvent : Adventure
     {
         // 奖励参数
-        public const int MoneyReward = 80;      // 选项 A：获得金币数量
-        public const int HealPercent = 25;      // 选项 C：恢复最大 HP 的百分比
+        public const int MoneyReward    = 80;   // 选项 1：获得金币数量
+        public const int HealPercent    = 25;   // 选项 2：恢复最大 HP 的百分比
+        // 选项 3：随机展品（由 RollExhibitInAdventure 决定）
+        public const int CardOfferCount = 3;    // 选项 4：供选择的卡牌张数
 
         // -----------------------------------------------------------------
         // 嵌套权重控制器

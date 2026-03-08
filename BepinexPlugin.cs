@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 namespace SampleCharacterMod
@@ -100,6 +101,84 @@ namespace SampleCharacterMod
         //   3. 走到任意 Adventure（事件）节点
         //   4. 查看 BepInEx 控制台的日志输出验证事件触发
         // -----------------------------------------------------------------
+        // -----------------------------------------------------------------
+        // 自定义事件选择界面（IMGUI）
+        //
+        // 由 SampleAdventureDialogPatch 的 CustomAdventureFlow 调用：
+        //   - 设置 pendingChoiceOptions 触发显示
+        //   - 等待 pendingChoiceResult >= 0 表示玩家做出选择
+        //   - 清除 pendingChoiceOptions 隐藏界面
+        //
+        // 背景图：pendingChoiceBackground 不为 null 时先绘制背景
+        // 描述文：pendingChoiceDescription 不为 null/空时绘制事件描述
+        // -----------------------------------------------------------------
+        internal static volatile string[] pendingChoiceOptions = null;
+        internal static volatile int pendingChoiceResult = -1;
+        internal static Texture2D pendingChoiceBackground = null;
+        internal static string pendingChoiceDescription = null;
+
+        private void OnGUI()
+        {
+            if (pendingChoiceOptions == null) return;
+
+            float sw = Screen.width;
+            float sh = Screen.height;
+
+            // 背景图（若已加载）
+            if (pendingChoiceBackground != null)
+            {
+                GUI.DrawTexture(new Rect(0, 0, sw, sh), pendingChoiceBackground, ScaleMode.ScaleAndCrop);
+            }
+
+            // 半透明遮罩，提升文字可读性
+            GUI.color = new Color(0f, 0f, 0f, 0.65f);
+            GUI.DrawTexture(new Rect(0, 0, sw, sh), Texture2D.whiteTexture);
+            GUI.color = Color.white;
+
+            // 事件描述文本
+            if (!string.IsNullOrEmpty(pendingChoiceDescription))
+            {
+                var descStyle = new GUIStyle(GUI.skin.label)
+                {
+                    fontSize = 20,
+                    alignment = TextAnchor.MiddleCenter,
+                    wordWrap = true,
+                };
+                descStyle.normal.textColor = new Color(1f, 0.95f, 0.8f);
+                float descW = sw * 0.75f;
+                float descH = 140f;
+                float descX = (sw - descW) * 0.5f;
+                float descY = sh * 0.18f;
+                GUI.Label(new Rect(descX, descY, descW, descH), pendingChoiceDescription, descStyle);
+            }
+
+            // 选项按钮
+            var options = pendingChoiceOptions; // 防止中途被置 null 导致长度变化
+            if (options == null) return;
+
+            float btnW = Mathf.Min(620f, sw * 0.7f);
+            float btnH = 62f;
+            float gap  = 16f;
+            float totalH = options.Length * btnH + (options.Length - 1) * gap;
+            float startY = (sh - totalH) * 0.5f + sh * 0.08f; // 稍微偏下，给描述留空间
+            float startX = (sw - btnW) * 0.5f;
+
+            var btnStyle = new GUIStyle(GUI.skin.button)
+            {
+                fontSize = 21,
+                alignment = TextAnchor.MiddleCenter,
+            };
+
+            for (int i = 0; i < options.Length; i++)
+            {
+                if (GUI.Button(new Rect(startX, startY + i * (btnH + gap), btnW, btnH), options[i], btnStyle))
+                {
+                    pendingChoiceResult = i;
+                    pendingChoiceOptions = null; // 隐藏界面
+                }
+            }
+        }
+
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.F6))
