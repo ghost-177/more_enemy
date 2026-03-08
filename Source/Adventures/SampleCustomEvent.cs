@@ -75,16 +75,18 @@ namespace SampleCharacterMod.Adventures
     //      - 拦截 AdventureFlow，跳过 YarnSpinner 对话
     //      - 通过 IMGUI 展示选项面板（背景图 + 描述 + 4 个按钮）
     //      - 等待玩家点击后发放对应奖励
+    //      - 选卡奖励使用游戏原生 SelectCardPanel（同觉医生治疗事件）
+    //      - 每局游戏只出现一次（通过 GameRunController.ExtraFlags 标记）
     // -----------------------------------------------------------------
     [AdventureInfo(WeighterType = typeof(SampleCustomEventWeighter))]
     [EntityLogic(typeof(SampleCustomEventDef))]
     public sealed class SampleCustomEvent : Adventure
     {
         // 奖励参数
-        public const int MoneyReward    = 80;   // 选项 1：获得金币数量
-        public const int HealPercent    = 25;   // 选项 2：恢复最大 HP 的百分比
-        // 选项 3：随机展品（由 RollExhibitInAdventure 决定）
-        public const int CardOfferCount = 3;    // 选项 4：供选择的卡牌张数
+        public const int MoneyReward    = 800;   // 选项 1：获得金币数量
+        public const int HealPercent    = 25;    // 选项 2：恢复最大 HP 的百分比
+        // 选项 3：随机展品（由 GetSpecialAdventureExhibit 决定）
+        public const int CardOfferCount = 5;     // 选项 4：供选择的卡牌张数（原生面板可展示较多张）
 
         // -----------------------------------------------------------------
         // 嵌套权重控制器

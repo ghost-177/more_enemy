@@ -3,9 +3,13 @@ using LBoL.Base;
 using LBoL.ConfigData;
 using LBoL.Core;
 using LBoL.Core.Adventures;
+using LBoL.Core.Battle.Interactions;
 using LBoL.Core.Cards;
+using LBoL.Core.Dialogs;
 using LBoL.Core.Stations;
 using LBoL.Presentation;
+using LBoL.Presentation.UI;
+using LBoL.Presentation.UI.Panels;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,12 +25,15 @@ namespace SampleCharacterMod.Adventures
     // 补丁列表：
     //   1. Stage_Initialize_Patch
     //      - 手动注册 AdventureConfig 到 _IdTable（sideloader 不自动做）
-    //      - 将 SampleCustomEvent 注入 Stage.AdventurePool
+    //      - 若本局游戏该事件尚未触发过，才将 SampleCustomEvent 注入 Stage.AdventurePool
+    //      - 通过 GameRunController.ExtraFlags 检查"每局只出现一次"标记
     //
     //   2. GameMaster_AdventureFlow_Patch
     //      - 拦截 AdventureFlow，替换为自定义协程
-    //      - 通过 BepinexPlugin.OnGUI 展示：背景图（右半屏）+ 描述文 + 4 个选项按钮（左半屏）
+    //      - 通过 BepinexPlugin.OnGUI 展示：背景图 + 描述文 + 4 个选项按钮
     //      - 等待玩家点击后发放对应奖励：金币 / 治疗 / 展品 / 选卡
+    //      - 选卡奖励优先使用游戏原生 SelectCardPanel（同觉医生治疗事件的效果）
+    //      - 事件完成后调用 adventure.SetGameRunFlag("SampleCustomEventCompleted") 防止重复出现
     //
     //   3. SampleAdventureDebugHelper
     //      - 强制注入高权重（F6 快捷键测试用）
@@ -48,6 +55,16 @@ namespace SampleCharacterMod.Adventures
             try
             {
                 EnsureAdventureConfigRegistered();
+
+                // 检查本局游戏该事件是否已触发过
+                // GameRunController.ExtraFlags 是 HashSet<string>，用于持久化标记
+                var master = UnityEngine.Object.FindObjectOfType<GameMaster>();
+                var gameRun = master?.CurrentGameRun;
+                if (gameRun?.ExtraFlags?.Contains("SampleCustomEventCompleted") == true)
+                {
+                    BepinexPlugin.log.LogInfo("[SampleCustomEvent] 本局游戏已触发过，跳过注入。");
+                    return;
+                }
 
                 var pool = __instance.AdventurePool;
                 if (pool == null) return;
@@ -118,10 +135,10 @@ namespace SampleCharacterMod.Adventures
         // 流程：
         //   1. 加载背景图（嵌入 PNG）
         //   2. 设置描述文本 + 4 个选项，触发 BepinexPlugin.OnGUI 展示界面
-        //      （界面布局：右半屏背景图，左半屏文字+按钮）
         //   3. 每帧 yield return null，等待玩家点击选项按钮
         //   4. 根据 pendingChoiceResult 发放对应奖励
-        //   5. yield break → 外层 CoEnterStation 自动处理离站
+        //   5. 标记事件已完成（防止本局再次出现）
+        //   6. station.Finish() → 解锁地图下一节点
         // ----------------------------------------------------------------
         static IEnumerator CustomAdventureFlow(AdventureStation station, SampleCustomEvent adventure)
         {
@@ -153,7 +170,7 @@ namespace SampleCharacterMod.Adventures
 
             int choice = BepinexPlugin.pendingChoiceResult;
 
-            // 彻底清理主菜单 IMGUI 状态
+            // 清理主菜单 IMGUI 状态（选卡面板由游戏原生 UI 接管，此处仅清选项）
             BepinexPlugin.pendingChoiceOptions = null;
             BepinexPlugin.pendingChoiceDescription = null;
 
@@ -168,9 +185,8 @@ namespace SampleCharacterMod.Adventures
                     break;
 
                 case 1: // 治疗
-                    int healPct = SampleCustomEvent.HealPercent;
-                    adventure.HealPercentage(healPct);
-                    BepinexPlugin.log.LogInfo($"[SampleCustomEvent] 奖励：恢复 {healPct}% HP");
+                    adventure.HealPercentage(SampleCustomEvent.HealPercent);
+                    BepinexPlugin.log.LogInfo($"[SampleCustomEvent] 奖励：恢复 {SampleCustomEvent.HealPercent}% HP");
                     break;
 
                 case 2: // 随机展品
@@ -178,38 +194,38 @@ namespace SampleCharacterMod.Adventures
                         yield return step;
                     break;
 
-                case 3: // 选卡（从若干随机卡中选 1）
+                case 3: // 选卡（优先原生 SelectCardPanel，失败则 IMGUI 兜底）
                     foreach (var step in SelectRandomCards(adventure))
                         yield return step;
                     break;
             }
 
+            // --- 步骤 5：标记本局游戏该事件已完成（防止重复出现）---
+            // adventure.SetGameRunFlag 将字符串添加到 GameRunController.ExtraFlags（HashSet<string>）
+            // 该字段会随存档持久化，因此即使存档后重进也不会重复出现
+            try
+            {
+                adventure.SetGameRunFlag("SampleCustomEventCompleted");
+                BepinexPlugin.log.LogInfo("[SampleCustomEvent] 事件完成标记已设置，本局不再重复出现。");
+            }
+            catch (Exception e)
+            {
+                BepinexPlugin.log.LogWarning("[SampleCustomEvent] SetGameRunFlag 失败: " + e.Message);
+            }
+
             // 清理背景图
             BepinexPlugin.pendingChoiceBackground = null;
 
-            // 必须手动调用 station.Finish() 解锁地图下一节点。
-            // CoEnterStation 的自动处理依赖原生 AdventureFlow 内部的完成信号，
-            // 我们完全替换了 AdventureFlow，因此需要自己触发。
+            // 必须手动调用 station.Finish() 解锁地图下一节点
             station.Finish();
             BepinexPlugin.log.LogInfo("[SampleCustomEvent] Station.Finish() 已调用，地图解锁。");
         }
 
         // ----------------------------------------------------------------
         // 奖励 C：随机展品
-        //
-        // 1. 调用 Stage.GetSpecialAdventureExhibit()（无参数，DoNotPublicize，用 AccessTools）
-        //    → 返回一个 Exhibit 实例（已从展品池中移除）
-        // 2. 通过 Adventure.GainExhibitRunner(exhibitId, message, optionIndex) 发放
-        //    → 内建展品获取流程（IEnumerator），包含 UI 动画
-        //
-        // 注：Adventure.HealPercentage(int) 用于治疗，不在 DoNotPublicize 列表中
         // ----------------------------------------------------------------
         static IEnumerable GainRandomExhibit(SampleCustomEvent adventure)
         {
-            // C# 规则：yield 不能出现在含 catch 子句的 try 块体中。
-            // 解决方案：所有可能抛异常的代码先在 try-catch 里运行，
-            // 然后 yield 在 try-catch 外面执行。
-
             LBoL.Core.Exhibit exhibit = null;
             IEnumerator coroutine = null;
 
@@ -218,13 +234,11 @@ namespace SampleCharacterMod.Adventures
                 var stage = adventure.GameRun?.CurrentStage;
                 if (stage != null)
                 {
-                    // GetSpecialAdventureExhibit 在 DoNotPublicize 列表中，需用 AccessTools
                     var rollMethod = AccessTools.Method(typeof(Stage), "GetSpecialAdventureExhibit");
                     exhibit = rollMethod?.Invoke(stage, null) as LBoL.Core.Exhibit;
                     if (exhibit != null)
                     {
                         BepinexPlugin.log.LogInfo($"[SampleCustomEvent] 奖励展品：{exhibit.Id}");
-                        // Adventure.GainExhibitRunner(string name, string message, int optionIndex)
                         coroutine = adventure.GainExhibitRunner(exhibit.Id, "", 0);
                     }
                 }
@@ -239,10 +253,8 @@ namespace SampleCharacterMod.Adventures
                 BepinexPlugin.log.LogWarning("[SampleCustomEvent] 无法获取展品，改发金币");
                 adventure.GainMoney(SampleCustomEvent.MoneyReward / 2);
                 yield break;
-            } 
+            }
 
-            // 驱动 GainExhibitRunner 协程
-            // yield return 必须在 try-catch 外部，用标志变量传递信息
             bool keepDriving = true;
             while (keepDriving)
             {
@@ -258,25 +270,29 @@ namespace SampleCharacterMod.Adventures
                     BepinexPlugin.log.LogWarning("[SampleCustomEvent] GainExhibitRunner 执行异常: " + e.Message);
                     keepDriving = false;
                 }
-                // yield 在 try-catch 外执行（满足 C# 规则）
                 if (moved) yield return current;
             }
         }
 
         // ----------------------------------------------------------------
-        // 奖励 D：从若干随机卡中选 1 张加入牌库
+        // 奖励 D：使用游戏原生 SelectCardPanel 选卡
         //
-        // 1. 通过 AccessTools 调用 GameRunController.RollCards(rng, weightTable, count, ...)
-        //    获取随机 Card 实例列表
-        // 2. 用 IMGUI 展示卡牌名称按钮（第二阶段选择面板）
-        // 3. 玩家选择后，调用 Adventure.GainCards(string[] names) 加入牌库
+        // 流程：
+        //   1. 通过 RollCards 获取随机 Card 实例列表
+        //   2. 创建 DialogStorage + 调用 adventure.SetStorage
+        //   3. 调用 adventure.SelectCards(cardIds) → 第一次 MoveNext 获得
+        //      MiniSelectCardInteraction（与觉医生选卡事件相同的交互对象）
+        //   4. 通过 UiManager.Instance.GetPanel<SelectCardPanel>() 获取面板
+        //   5. 驱动 SelectCardPanel.ViewMiniSelect(interaction)
+        //      → 显示原生选卡面板（完整卡牌信息，可悬停查看详情）
+        //   6. 面板完成后，interaction.SelectedCard 即玩家选定的卡
+        //   7. 调用 adventure.GainCards 将卡加入牌库
         //
-        // 注：Adventure.SelectCards(string[]) 需要完整的 YarnSpinner dialog 上下文，
-        //     我们已绕过 dialog，因此改用 IMGUI + GainCards 方式。
+        //   降级：若原生面板获取失败，退回 IMGUI 按钮选卡（兜底）
         // ----------------------------------------------------------------
         static IEnumerable SelectRandomCards(SampleCustomEvent adventure)
         {
-            // 步骤 1：获取随机卡牌实例（全部在 try-catch 中，不含 yield）
+            // --- 步骤 1：获取随机卡牌实例 ---
             Card[] cards = null;
             try
             {
@@ -284,9 +300,6 @@ namespace SampleCharacterMod.Adventures
                 var stage = gameRun?.CurrentStage;
                 if (gameRun != null && stage != null)
                 {
-                    // RollCards(RandomGen rng, CardWeightTable weightTable, Int32 count,
-                    //           Boolean applyFactors, Boolean battleRolling, Predicate<CardConfig> filter)
-                    // 用参数数量筛选，避免 typeof(CardWeightTable) 命名空间问题
                     var flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
                     var rollCards = typeof(GameRunController)
                         .GetMethods(flags)
@@ -318,8 +331,109 @@ namespace SampleCharacterMod.Adventures
                 yield break;
             }
 
-            // 步骤 2：取得卡牌显示名称
-            // GameEntity.Name 在 DoNotPublicize 列表中，需用 AccessTools
+            // --- 步骤 2-5：尝试使用原生 SelectCardPanel 选卡 ---
+            // Adventure.SelectCards(string[]) 是 IEnumerator：
+            //   MoveNext() 第一次 → 创建 MiniSelectCardInteraction 并 yield 出来
+            //   VnPanel 收到后调用 SelectCardPanel.ViewMiniSelect(interaction)
+            //   我们绕过了 VnPanel，因此手动完成这个过程
+
+            IEnumerator selectCoroutine = null;
+            MiniSelectCardInteraction interaction = null;
+            IEnumerator viewCoroutine = null;
+            bool useNativePanel = false;
+
+            try
+            {
+                // 2a. 创建 DialogStorage（SelectCards 内部会向 Storage 写入选定卡 ID）
+                var storage = new DialogStorage();
+                adventure.SetStorage(storage);
+
+                // 2b. 调用 SelectCards，第一次 MoveNext 会 yield 出 MiniSelectCardInteraction
+                string[] cardIds = cards.Select(c => c.Id).ToArray();
+                selectCoroutine = adventure.SelectCards(cardIds);
+                if (selectCoroutine.MoveNext())
+                {
+                    interaction = selectCoroutine.Current as MiniSelectCardInteraction;
+                }
+
+                // 2c. 获取 SelectCardPanel（在整个游戏局内常驻，包括冒险阶段）
+                if (interaction != null)
+                {
+                    // UiManager.GetPanel<T>() 是静态方法，直接通过类名调用
+                    var scPanel = UiManager.GetPanel<SelectCardPanel>();
+                    if (scPanel != null)
+                    {
+                        viewCoroutine = scPanel.ViewMiniSelect(interaction);
+                        useNativePanel = true;
+                        BepinexPlugin.log.LogInfo("[SampleCustomEvent] 使用原生 SelectCardPanel 选卡");
+                    }
+                    else
+                    {
+                        BepinexPlugin.log.LogWarning("[SampleCustomEvent] SelectCardPanel 未找到，退回 IMGUI");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                BepinexPlugin.log.LogWarning("[SampleCustomEvent] 原生选卡面板初始化失败: " + e.Message);
+                useNativePanel = false;
+            }
+
+            if (useNativePanel && viewCoroutine != null)
+            {
+                // --- 步骤 5：驱动原生选卡面板协程 ---
+                bool keepDriving = true;
+                while (keepDriving)
+                {
+                    bool moved = false;
+                    try
+                    {
+                        keepDriving = viewCoroutine.MoveNext();
+                        if (keepDriving) moved = true;
+                    }
+                    catch (Exception e)
+                    {
+                        BepinexPlugin.log.LogWarning("[SampleCustomEvent] ViewMiniSelect 执行异常: " + e.Message);
+                        keepDriving = false;
+                    }
+                    // yield 在 try-catch 外，满足 C# 规则
+                    if (moved) yield return viewCoroutine.Current;
+                }
+
+                // --- 步骤 6：恢复 SelectCards 协程（让它完成内部清理/存储结果）---
+                try { selectCoroutine.MoveNext(); } catch { }
+
+                // --- 步骤 7：将玩家选定的卡加入牌库 ---
+                var selectedCard = interaction.SelectedCard;
+                if (selectedCard != null)
+                {
+                    BepinexPlugin.log.LogInfo($"[SampleCustomEvent] 选定卡牌：{selectedCard.Id}");
+                    bool ok = false;
+                    try { adventure.GainCards(new[] { selectedCard.Id }); ok = true; }
+                    catch (Exception e) { BepinexPlugin.log.LogWarning("[SampleCustomEvent] GainCards 失败: " + e.Message); }
+                    if (!ok) adventure.GainMoney(SampleCustomEvent.MoneyReward / 2);
+                }
+                else
+                {
+                    // 玩家未选择（理论上 MiniSelect 不能取消，但做兜底）
+                    BepinexPlugin.log.LogWarning("[SampleCustomEvent] 未选定卡牌，改发金币");
+                    adventure.GainMoney(SampleCustomEvent.MoneyReward / 2);
+                }
+                yield break;
+            }
+
+            // --- 降级方案：IMGUI 按钮选卡（原生面板不可用时兜底）---
+            BepinexPlugin.log.LogInfo("[SampleCustomEvent] 退回 IMGUI 选卡模式");
+            foreach (var step in SelectRandomCardsImgui(adventure, cards))
+                yield return step;
+        }
+
+        // ----------------------------------------------------------------
+        // IMGUI 降级：用文字按钮列表让玩家选卡（原生面板不可用时）
+        // ----------------------------------------------------------------
+        static IEnumerable SelectRandomCardsImgui(SampleCustomEvent adventure, Card[] cards)
+        {
+            // 获取卡牌显示名称（GameEntity.Name 在 DoNotPublicize 列表中，用 AccessTools）
             var nameGetter = AccessTools.PropertyGetter(typeof(GameEntity), "Name");
             string[] cardLabels = cards.Select((c, i) =>
             {
@@ -328,10 +442,8 @@ namespace SampleCharacterMod.Adventures
                 return $"[{i + 1}] {name ?? c.Id}";
             }).ToArray();
 
-            BepinexPlugin.log.LogInfo("[SampleCustomEvent] 提供卡牌：" + string.Join(", ", cardLabels));
+            BepinexPlugin.log.LogInfo("[SampleCustomEvent] IMGUI 提供卡牌：" + string.Join(", ", cardLabels));
 
-            // 步骤 3：通过 IMGUI 展示卡牌选择面板（第二阶段）
-            // yield 不在 try-catch 中，合法
             BepinexPlugin.pendingChoiceDescription =
                 AdventureEventLocalize.GetCardSelectDescription("SampleCustomEvent")
                 ?? "请从以下卡牌中选择一张加入牌库：";
@@ -351,29 +463,16 @@ namespace SampleCharacterMod.Adventures
                 yield break;
             }
 
-            // 步骤 4：Adventure.GainCards(string[] names) 加入选定卡牌
-            // GainCards 是公开方法，直接调用（不需要 AccessTools）
             string selectedId = cards[picked].Id;
-            BepinexPlugin.log.LogInfo($"[SampleCustomEvent] 选择卡牌：{selectedId}");
+            BepinexPlugin.log.LogInfo($"[SampleCustomEvent] IMGUI 选择卡牌：{selectedId}");
             bool gainOk = false;
-            try
-            {
-                adventure.GainCards(new string[] { selectedId });
-                gainOk = true;
-            }
-            catch (Exception e)
-            {
-                BepinexPlugin.log.LogWarning("[SampleCustomEvent] GainCards 失败: " + e.Message);
-            }
-            if (!gainOk)
-                adventure.GainMoney(SampleCustomEvent.MoneyReward / 2);
+            try { adventure.GainCards(new string[] { selectedId }); gainOk = true; }
+            catch (Exception e) { BepinexPlugin.log.LogWarning("[SampleCustomEvent] GainCards 失败: " + e.Message); }
+            if (!gainOk) adventure.GainMoney(SampleCustomEvent.MoneyReward / 2);
         }
 
         // ----------------------------------------------------------------
         // 加载背景图（嵌入资源 Resources/Adventure/SampleCustomEventDef.png）
-        //
-        // 使用 Assembly.GetManifestResourceStream 直接加载，
-        // 资源名称格式：{RootNamespace}.{文件夹}.{文件名}
         // ----------------------------------------------------------------
         static Texture2D _cachedBackground = null;
 
@@ -388,9 +487,6 @@ namespace SampleCharacterMod.Adventures
             try
             {
                 var asm = System.Reflection.Assembly.GetExecutingAssembly();
-
-                // 嵌入资源名称：RootNamespace.Resources.Adventure.SampleCustomEventDef.png
-                // RootNamespace 由 csproj 设置（项目文件名去掉连字符）= SampleCharacterMod_windows
                 const string resourceName = "SampleCharacterMod_windows.Resources.Adventure.SampleCustomEventDef.png";
 
                 using (var stream = asm.GetManifestResourceStream(resourceName))
@@ -413,7 +509,6 @@ namespace SampleCharacterMod.Adventures
                     }
                     else
                     {
-                        // 列出所有嵌入资源名称以便调试
                         var allNames = string.Join(", ", asm.GetManifestResourceNames());
                         BepinexPlugin.log.LogWarning($"[SampleCustomEvent] 未找到嵌入资源 '{resourceName}'，可用资源：{allNames}");
                     }
@@ -444,6 +539,13 @@ namespace SampleCharacterMod.Adventures
             {
                 BepinexPlugin.log.LogWarning("[SampleCustomEvent] ForceNextAdventure: CurrentStage 为 null");
                 return;
+            }
+
+            // 如果事件已完成，先清除标记（方便调试反复触发）
+            if (gameRun.ExtraFlags?.Contains("SampleCustomEventCompleted") == true)
+            {
+                gameRun.ExtraFlags.Remove("SampleCustomEventCompleted");
+                BepinexPlugin.log.LogInfo("[SampleCustomEvent] 已清除完成标记（调试用）");
             }
 
             var pool = stage.AdventurePool;
