@@ -181,18 +181,17 @@ internal static class GameMaster_AdventureFlow_Patch
     static IEnumerator CustomAdventureFlow(AdventureStation station, SampleCustomEvent adventure)
     {
         // 发放奖励...
-        yield break; // 协程结束，外层 CoEnterStation 自动调用 EndStationFlow 处理离站
+
+        // ⚠️ 必须手动调用！否则地图下一节点不会解锁（按钮始终 inactive）
+        // CoEnterStation 的自动处理依赖原生 AdventureFlow 内部完成信号，
+        // 完全替换后该信号不会发出，必须自己触发。
+        station.Finish();
     }
 }
 ```
 
-**必须手动调用 `station.Finish()`**，否则地图下一节点不会解锁（按钮 inactive）。
-`CoEnterStation` 的自动处理依赖原生 AdventureFlow 内部的完成信号，完全替换后需要自己触发：
-
-```csharp
-// 在 CustomAdventureFlow 最后调用
-station.Finish();
-```
+> **⚠️ 关键陷阱：`station.Finish()` 必须手动调用。**
+> 错误症状：奖励正常发放，但之后点击地图节点时持续打印 `Mapnode button is inactive`。
 
 ### GameMaster 官方自定义 Adventure 机制（可选替代方案）
 
@@ -205,13 +204,69 @@ IAdventureHandler 接口：
 
 可以在 `GameMaster.Awake()` 的 Postfix 中注册，作为 AdventureFlow 补丁的替代方案。
 
+### Adventure 类可直接调用的奖励方法（无需 AccessTools）
+
+反射扫描确认，以下方法在 Adventure 基类上公开可调用：
+
+```csharp
+adventure.GainMoney(int money)
+adventure.HealPercentage(int percentage)      // 恢复最大 HP 百分比
+adventure.Heal(int heal, string audioName)
+adventure.GainCards(string[] names)           // 按 ID 直接加卡入牌库
+adventure.SelectCards(string[] cardList)       // 展示选卡 UI（需要 YarnSpinner 上下文，见注意）
+adventure.GainExhibitRunner(string name, string message, int optionIndex)  // IEnumerator，给展品
+adventure.UpgradeDeckCards(string description, bool canCancel)             // IEnumerator
+adventure.RemoveDeckCards(string description, bool canCancel)              // IEnumerator
+```
+
+> **注意**：`adventure.SelectCards(string[])` 需要完整的 YarnSpinner dialog 上下文（SetStorage 已调用）。
+> 若已绕过 AdventureFlow，改用 **IMGUI 二阶段选卡 + adventure.GainCards(string[])** 替代。
+
 ### DoNotPublicize 中需要用 AccessTools 的成员
 
 以下成员在 csproj 的 DoNotPublicize 列表中，**不能直接调用，必须通过 AccessTools**：
 
 - `Stage.Initialize` → `AccessTools.Method(typeof(Stage), "Initialize")`
+- `Stage.GetSpecialAdventureExhibit` → `AccessTools.Method(typeof(Stage), "GetSpecialAdventureExhibit")` → 返回 `Exhibit`（无参数）
 - `Adventure.DialogName` → `AccessTools.PropertyGetter(typeof(Adventure), "DialogName")`
 - `Adventure.InitVariables` → `AccessTools.Method(typeof(Adventure), "InitVariables")`
+- `GameEntity.Name`（含 Card.Name）→ `AccessTools.PropertyGetter(typeof(GameEntity), "Name")`
+
+### 虚方法被 Publicizer 排除（IncludeVirtualMembers=false）
+
+以下成员是**虚方法**，Publicizer 不公开，需用 AccessTools 反射调用：
+
+```csharp
+// GameRunController 上的虚方法
+// RollCards - 注意有多个重载，用参数数量筛选避免 typeof(CardWeightTable) 命名空间问题
+var rollCards = typeof(GameRunController)
+    .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+    .FirstOrDefault(m => m.Name == "RollCards" && m.GetParameters().Length == 6);
+// 签名：RollCards(RandomGen rng, CardWeightTable weightTable, int count,
+//               bool applyFactors, bool battleRolling, Predicate<CardConfig> filter)
+
+// GainExhibitInstantly(Exhibit exhibit, bool triggerVisual, VisualSourceData exhibitSource)
+// VisualSourceData 是类（非结构体），可传 null
+var gainInstantly = AccessTools.Method(typeof(GameRunController), "GainExhibitInstantly");
+gainInstantly.Invoke(gameRun, new object[] { exhibit, false, null });
+```
+
+### Stage / GameRunController 关键属性（通过 Publicizer 已公开）
+
+```csharp
+// Stage 上的卡牌权重表（可直接访问）
+stage.EnemyCardWeight          // CardWeightTable，可传给 RollCards
+
+// GameRunController 上的随机数生成器
+gameRun.CardRng                // RandomGen（LBoL.Base 命名空间）
+gameRun.ExhibitRng
+gameRun.AdventureRng
+
+// Exhibit 和 Card 的 ID 属性
+exhibit.Id                     // string，展品 config ID
+card.Id                        // string，卡牌 config ID
+card.Config                    // CardConfig
+```
 
 ### Stage.AdventurePool
 
@@ -253,30 +308,81 @@ private void Update()
 
 ## 本地化
 
-Adventure 本地化文件：`DirResources/AdventuresEn.yaml`
+### Adventure 本地化（AdventuresEn.yaml）
+
+Adventure 本地化**不通过** `BatchLocalization`，走 sideloader 的 AdventuresEn.yaml 机制。
+
+**YAML key 规则**：使用 **Logic 类名**（非 Def 类名），即去掉末尾 `Def` 后的名称：
+- `SampleCustomEventDef` → Key 为 `SampleCustomEvent`（使用错误 key 会导致 `Title not found` 警告）
+
+**sideloader 识别的字段**：`Name`、`HostName`（HostId 为空时留空字符串即可）
+
+**自定义扩展字段**（sideloader 忽略，由 `AdventureEventLocalize.cs` 读取）：
 
 ```yaml
-SampleCustomEventDef:
-  Name: "The Mysterious Traveler's Gift"
+SampleCustomEvent:
+  Name: "神秘旅行者的礼物"
+  HostName: ""
   Description: |-
-    A mysterious traveler appears before you on the road...
+    一位神秘的旅行者出现在你面前。
+    「旅行者，我有些东西想送给你——请慎重选择。」
+  Options:
+    - "【金币】接受钱袋（获得 {money} 金币）"
+    - "【治疗】喝下治愈药水（恢复最大 HP 的 {healPct}%）"
+    - "【展品】收下神秘遗物（随机获得一件展品）"
+    - "【卡牌】翻阅卡牌收藏（从 {cardCount} 张随机卡中选 1 张）"
+  CardSelectDescription: "请从以下卡牌中选择一张加入牌库："
 ```
 
-注意：Adventure 本地化**不通过** `BatchLocalization`，走 sideloader 的 AdventuresEn.yaml 机制。
+占位符 `{money}` / `{healPct}` / `{cardCount}` 由 `AdventureEventLocalize.BuildDefaultReplacements()` 替换。
+
+### AdventureEventLocalize 本地化读取器
+
+`Source/Adventures/AdventureEventLocalize.cs` — 从与 DLL 同目录的 YAML 文件读取自定义字段：
+
+```csharp
+AdventureEventLocalize.GetDescription("SampleCustomEvent")
+AdventureEventLocalize.GetOptions("SampleCustomEvent")          // string[]，含占位符替换
+AdventureEventLocalize.GetCardSelectDescription("SampleCustomEvent")
+```
+
+- 文件路径：`Assembly.GetExecutingAssembly().Location` 同目录下的 `Adventures{LangCode}.yaml`
+- 多语言：复制 `AdventuresEn.yaml` → `AdventuresCn.yaml`，修改 `LoadYaml()` 中的语言检测逻辑
+- 若 YAML 读取失败，调用方应提供 `??` 兜底硬编码文本
+
+### BatchLocalization（卡牌/遗物等）
+
+```csharp
+// Source/Localization/Localization.cs
+BatchLocalization CardsBatchLoc = new BatchLocalization(directorySource, typeof(CardTemplate), "Cards");
+CardsBatchLoc.DiscoverAndLoadLocFiles("Cards");
+```
 
 ## 关键 using 命名空间
 
 ```csharp
-using LBoL.Core;                    // GameRunController, Stage
+using LBoL.Base;                    // RandomGen（反射调用 RollCards 时需要）
+using LBoL.Core;                    // GameRunController, Stage, GameEntity
 using LBoL.Core.Adventures;         // Adventure, IAdventureWeighter, AdventureInfoAttribute
+using LBoL.Core.Cards;              // Card
 using LBoL.Core.Stations;           // AdventureStation, GapStation
-using LBoL.ConfigData;              // AdventureConfig
+using LBoL.ConfigData;              // AdventureConfig, CardConfig
 using LBoL.Presentation;            // GameMaster
 using LBoLEntitySideloader;         // EntityManager, IdContainer
 using LBoLEntitySideloader.Entities;// AdventureTemplate, CardTemplate, etc.
 using LBoLEntitySideloader.Attributes; // AdventureInfo (属性所在命名空间)
 using HarmonyLib;                   // HarmonyPatch, AccessTools
+using YamlDotNet.Serialization;     // DeserializerBuilder（自定义 YAML 读取）
+using YamlDotNet.Serialization.NamingConventions; // PascalCaseNamingConvention
 ```
+
+> **注意**：`CardWeightTable` 的命名空间在编译时有时找不到（Publicizer 问题）。
+> 避免在 `typeof(CardWeightTable)` 中使用，改用 LINQ 按参数数量查找方法重载：
+> ```csharp
+> var rollCards = typeof(GameRunController)
+>     .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+>     .FirstOrDefault(m => m.Name == "RollCards" && m.GetParameters().Length == 6);
+> ```
 
 ## csproj 关键引用
 
@@ -294,25 +400,64 @@ using HarmonyLib;                   // HarmonyPatch, AccessTools
 </Reference>
 ```
 
+## IMGUI 自定义事件界面
+
+`BepinexPlugin` 提供静态字段供协程和 `OnGUI` 通信：
+
+```csharp
+internal static volatile string[] pendingChoiceOptions = null;  // 非 null 时显示界面
+internal static volatile int pendingChoiceResult = -1;          // 玩家选择的索引
+internal static Texture2D pendingChoiceBackground = null;       // 右半屏背景图
+internal static string pendingChoiceDescription = null;         // 左半屏描述文本
+```
+
+**UI 布局**：右半屏（50%）显示背景图，左半屏（50%）深色遮罩 + 描述文本 + 选项按钮靠底部。
+
+**嵌入图片加载**（EmbeddedSource 路径会失败，用 GetManifestResourceStream）：
+```csharp
+// 资源名称格式：{RootNamespace}.{文件夹用点分隔}.{文件名}
+// csproj RootNamespace = SampleCharacterMod_windows（项目文件名）
+string name = "SampleCharacterMod_windows.Resources.Adventure.SampleCustomEventDef.png";
+using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(name);
+var tex = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+tex.LoadImage(bytes);  // 需要 UnityEngine.ImageConversionModule.dll
+```
+
+**C# yield 限制**：`yield return` 不能出现在含 `catch` 子句的 `try` 块体中。
+驱动嵌套协程时，把 `MoveNext()` 包在 try-catch 里，yield 放在 try-catch 外面：
+```csharp
+bool keepDriving = true;
+while (keepDriving)
+{
+    bool moved = false;
+    try { keepDriving = coroutine.MoveNext(); if (keepDriving) moved = true; }
+    catch { keepDriving = false; }
+    if (moved) yield return coroutine.Current;  // yield 在 try-catch 外，合法
+}
+```
+
 ## 文件结构
 
 ```
 lbol_sample_character_mod-main/
-├── BepinexPlugin.cs                    # 入口点，F6 测试快捷键
+├── BepinexPlugin.cs                    # 入口点，IMGUI OnGUI，F6 测试快捷键
 ├── SampleCharacterMod_windows.csproj   # 项目配置，Publicize/DoNotPublicize 列表
 ├── Source/
 │   ├── Adventures/
 │   │   ├── SampleAdventureTemplate.cs  # Adventure Def 基类
 │   │   ├── SampleCustomEvent.cs        # 自定义事件 Def + Logic + Weighter
-│   │   └── SampleAdventureDialogPatch.cs # 3个 Harmony 补丁
+│   │   ├── SampleAdventureDialogPatch.cs  # Harmony 补丁：Stage_Initialize + AdventureFlow
+│   │   └── AdventureEventLocalize.cs   # YAML 自定义字段读取器（Options/Description）
 │   ├── Cards/                          # 卡牌相关
 │   ├── Exhibits/                       # 遗物相关
 │   ├── Enemies/                        # 敌人相关
 │   └── Localization/
 │       └── Localization.cs             # BatchLocalization（卡牌/遗物用）
 ├── DirResources/
-│   ├── AdventuresEn.yaml               # 事件本地化
+│   ├── AdventuresEn.yaml               # 事件本地化（含自定义 Options 字段）
 │   ├── CardsEn.yaml                    # 卡牌本地化
 │   └── ...
-└── Resources/                          # 嵌入图片资源（.png）
+└── Resources/
+    └── Adventure/
+        └── SampleCustomEventDef.png    # 事件背景图（嵌入资源）
 ```
