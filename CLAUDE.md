@@ -186,7 +186,13 @@ internal static class GameMaster_AdventureFlow_Patch
 }
 ```
 
-不需要手动调用 `station.Finish()`，外层 `CoEnterStation` 在 `AdventureFlow` 完成后自动处理。
+**必须手动调用 `station.Finish()`**，否则地图下一节点不会解锁（按钮 inactive）。
+`CoEnterStation` 的自动处理依赖原生 AdventureFlow 内部的完成信号，完全替换后需要自己触发：
+
+```csharp
+// 在 CustomAdventureFlow 最后调用
+station.Finish();
+```
 
 ### GameMaster 官方自定义 Adventure 机制（可选替代方案）
 

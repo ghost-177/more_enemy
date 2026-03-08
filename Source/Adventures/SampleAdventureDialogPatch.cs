@@ -187,7 +187,11 @@ namespace SampleCharacterMod.Adventures
             // 清理背景图
             BepinexPlugin.pendingChoiceBackground = null;
 
-            // yield break → 外层 CoEnterStation 自动调用 EndStationFlow 处理离站
+            // 必须手动调用 station.Finish() 解锁地图下一节点。
+            // CoEnterStation 的自动处理依赖原生 AdventureFlow 内部的完成信号，
+            // 我们完全替换了 AdventureFlow，因此需要自己触发。
+            station.Finish();
+            BepinexPlugin.log.LogInfo("[SampleCustomEvent] Station.Finish() 已调用，地图解锁。");
         }
 
         // ----------------------------------------------------------------
