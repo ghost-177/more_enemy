@@ -257,6 +257,11 @@
         <Publicize Include="LBoL.Core:LBoL.Core.Units.EnemyUnit.React" />
         <Publicize Include="LBoL.Core:LBoL.Core.Units.PlayerUnit.React" />
         <Publicize Include="LBoL.Core:LBoL.Core.Battle.BattleAction.GetPhases" />
+        <!-- Adventure.InitVariables 是私有方法（非 virtual），无法通过继承覆盖。
+             自定义事件通过 Harmony AccessTools 补丁注入 GapOptions。
+             详见 Source/Adventures/SampleAdventureDialogPatch.cs -->
+        <!-- <Publicize Include="LBoL.Core:LBoL.Core.Adventures.Adventure.InitVariables" /> -->
+        <!-- <Publicize Include="LBoL.Core:LBoL.Core.Adventures.Adventure.DialogName" /> -->
     </ItemGroup>
 
     <!--Don't publicize virtual members which are meant to be overwritten in concrete entity logic types-->
@@ -497,6 +502,9 @@
         </Reference>
         <Reference Include="Untitled.ConfigDataBuilder.Base">
             <HintPath>$(GameFolder)\LBoL_Data\Managed\Untitled.ConfigDataBuilder.Base.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.InputLegacyModule">
+            <HintPath>$(GameFolder)\LBoL_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
         </Reference>
         <Reference Include="UnityEngine.ImageConversionModule">
             <HintPath>$(GameFolder)\LBoL_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>

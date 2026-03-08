@@ -1,0 +1,16 @@
+# =====================================================================
+# 事件（Adventure/Gap）本地化文件
+# 文件名规则：Adventures{语言代码}.yaml，例如 AdventuresEn.yaml（英文）
+#
+# 每个事件的 Key 为其 ID（即 SampleCustomEventDef 中 GetId() 返回的值）。
+# 字段说明：
+#   Name        - 事件标题，显示在事件界面顶部
+#   Description - 事件的叙述文本（剧情描述），支持多行
+# =====================================================================
+
+SampleCustomEventDef:
+  Name: "The Mysterious Traveler's Gift"
+  Description: |-
+    A mysterious traveler appears before you on the road.
+    "Greetings, adventurer. I have something for you—choose wisely."
+    The traveler reveals three options and awaits your decision.

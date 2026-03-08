@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//d/Program FIles/Steam/steamapps/common/LBoL/BepInEx/plugins/LBoL-Entity-Sideloader/**)",
+      "Read(//d/Program Files/Steam/steamapps/common/LBoL/BepInEx/plugins/LBoL-Entity-Sideloader/**)",
+      "Bash(powershell:*)",
+      "Bash(python3:*)",
+      "Bash(python:*)",
+      "Bash(ls:*)",
+      "Bash(rm:*)",
+      "Bash(dotnet build:*)",
+      "Bash(__NEW_LINE_659d39282da83719__:*)",
+      "Bash(__NEW_LINE_b79c0fdc14895368__ powershell:*)",
+      "Bash(__NEW_LINE_30c73ff8653182c3__ echo:*)",
+      "Read(//e/extraTool/VisualStudio2022/vsProject/lbol_sample_character_mod-main/$HOME/.nuget/packages/**)",
+      "Bash(find /tmp -name \"LBoL.Core*.dll\")",
+      "Bash(powershell.exe:*)",
+      "Bash(where python:*)",
+      "Bash(cmd.exe:*)",
+      "Bash($bytes =:*)"
+    ]
+  }
+}

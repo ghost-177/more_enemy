@@ -6,6 +6,8 @@ using LBoL.EntityLib.EnemyUnits.Character;
 using LBoLEntitySideloader;
 using LBoLEntitySideloader.Entities;
 using LBoLEntitySideloader.Resource;
+using LBoL.Presentation;
+using SampleCharacterMod.Adventures;
 using SampleCharacterMod.Cards.Template;
 using SampleCharacterMod.Config;
 using System;
@@ -84,6 +86,36 @@ namespace SampleCharacterMod
 
             Func<Sprite> getSprite = () => ResourceLoader.LoadSprite("BossIcon.png", directorySource);
             EnemyUnitTemplate.AddBossNodeIcon(nameof(SampleCharacterMod.Enemies.SampleCharacterMod), getSprite);
+        }
+
+        // -----------------------------------------------------------------
+        // 测试快捷键：F6
+        //
+        // 在游戏进行中按下 F6，将以极高权重把 SampleCustomEvent 注入
+        // 当前幕的事件池，下一个 Adventure 节点必定触发自定义事件。
+        //
+        // 使用方法：
+        //   1. 开始游戏并进入地图
+        //   2. 按 F6（控制台会打印确认信息）
+        //   3. 走到任意 Adventure（事件）节点
+        //   4. 查看 BepInEx 控制台的日志输出验证事件触发
+        // -----------------------------------------------------------------
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.F6))
+            {
+                // 通过 GameMaster（Presentation 层）获取当前 GameRunController
+                var master = UnityEngine.Object.FindObjectOfType<LBoL.Presentation.GameMaster>();
+                var gameRun = master?.CurrentGameRun;
+                if (gameRun != null)
+                {
+                    SampleAdventureDebugHelper.ForceNextAdventure(gameRun);
+                }
+                else
+                {
+                    log.LogWarning("[SampleCustomEvent] F6 按下但当前没有进行中的游戏。");
+                }
+            }
         }
 
         private void OnDestroy()
