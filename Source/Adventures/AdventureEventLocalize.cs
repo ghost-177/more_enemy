@@ -1,3 +1,4 @@
+using LBoL.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,16 +12,18 @@ namespace SampleCharacterMod.Adventures
     // 事件（Adventure）UI 文本本地化读取器
     //
     // 从与 DLL 同目录下的 Adventures{LangCode}.yaml 文件中读取
-    // sideloader 不认识的自定义字段（Options、CardSelectDescription 等）。
+    // sideloader 不认识的自定义字段（Description、Options、CardSelectDescription 等）。
     //
-    // 文件加载规则（按优先级）：
-    //   1. Adventures{当前语言}.yaml（如 AdventuresCn.yaml）—— 暂未实现自动检测
-    //   2. AdventuresEn.yaml（英文/默认兜底）
+    // 文件选择规则（与 BatchLocalization 一致）：
+    //   1. Adventures{CurrentLocale}.yaml（如 AdventuresZhHans.yaml、AdventuresEn.yaml）
+    //      — 使用 LBoL.Core.Localization.CurrentLocale 读取当前游戏语言
+    //   2. AdventuresEn.yaml（英文/默认兜底，找不到对应语言时使用）
     //
     // 多语言扩展说明：
-    //   如需添加中文（或其他语言），只需在 DirResources 目录复制
-    //   AdventuresEn.yaml → AdventuresCn.yaml 并翻译其中文本。
-    //   修改 LoadYaml() 中的语言检测逻辑即可启用。
+    //   如需添加新语言，只需在 DirResources 目录复制
+    //   AdventuresEn.yaml → Adventures{Locale}.yaml（如 AdventuresZhHans.yaml）
+    //   并翻译其中文本即可——无需修改任何代码。
+    //   Locale 枚举值名称：En, ZhHans, ZhHant, Ja, Ru, Es, Pl, Pt, Fr, Tr, Ko, Vi, It, De, Uk, Hu
     // =====================================================================
     internal static class AdventureEventLocalize
     {
@@ -36,6 +39,7 @@ namespace SampleCharacterMod.Adventures
         }
 
         private static Dictionary<string, EventLocData> _cache = null;
+        private static string _loadedLangCode = null;
         private static readonly object _lock = new object();
 
         // ----------------------------------------------------------------
@@ -61,7 +65,6 @@ namespace SampleCharacterMod.Adventures
             var data = GetData(eventId);
             if (data?.Options == null) return null;
 
-            // 合并默认替换字典 + 调用方传入的额外值
             var replacements = BuildDefaultReplacements();
             if (values != null)
                 foreach (var kv in values)
@@ -74,7 +77,7 @@ namespace SampleCharacterMod.Adventures
         }
 
         // ----------------------------------------------------------------
-        // 获取卡牌选择阶段的提示文本
+        // 获取卡牌选择阶段的提示文本（IMGUI 降级选卡时使用）
         // ----------------------------------------------------------------
         public static string GetCardSelectDescription(string eventId)
         {
@@ -94,28 +97,39 @@ namespace SampleCharacterMod.Adventures
 
         private static void EnsureLoaded()
         {
-            if (_cache != null) return;
+            // 每次都检查语言是否变化，变了则重新加载
+            string currentLang = LBoL.Core.Localization.CurrentLocale.ToString();
+            if (_cache != null && _loadedLangCode == currentLang) return;
             lock (_lock)
             {
-                if (_cache != null) return;
-                _cache = LoadYaml();
+                currentLang = LBoL.Core.Localization.CurrentLocale.ToString();
+                if (_cache != null && _loadedLangCode == currentLang) return;
+                _cache = LoadYaml(currentLang);
+                _loadedLangCode = currentLang;
             }
         }
 
-        private static Dictionary<string, EventLocData> LoadYaml()
+        private static Dictionary<string, EventLocData> LoadYaml(string langCode)
         {
-            // DLL 与 YAML 文件在同一目录（PostBuild 将 DirResources/* 复制到 scripts 文件夹）
             string asmDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-            // 未来可在此处加入语言检测逻辑：
-            // string langCode = DetectGameLanguage(); // 返回 "En" / "Cn" 等
-            // 目前固定使用英文文件
-            string langCode = "En";
-
+            // 1. 根据传入的语言代码构建文件名
+            //    LBoL.Core.Localization.CurrentLocale 返回当前语言（Locale 枚举），
+            //    ToString() 得到枚举名，如 "En"、"ZhHans"、"Ja" 等。
+            //    与 BatchLocalization.DiscoverAndLoadLocFiles 使用相同的命名规则。
             string path = Path.Combine(asmDir, $"Adventures{langCode}.yaml");
+
+            // 2. 找不到对应语言文件则退回英文兜底
             if (!File.Exists(path))
             {
-                BepinexPlugin.log.LogWarning($"[AdventureEventLocalize] 未找到文件：{path}");
+                if (langCode != "En")
+                    BepinexPlugin.log.LogInfo($"[AdventureEventLocalize] 未找到 Adventures{langCode}.yaml，退回 AdventuresEn.yaml");
+                path = Path.Combine(asmDir, "AdventuresEn.yaml");
+            }
+
+            if (!File.Exists(path))
+            {
+                BepinexPlugin.log.LogWarning($"[AdventureEventLocalize] 未找到本地化文件：{path}");
                 return new Dictionary<string, EventLocData>();
             }
 
@@ -127,7 +141,7 @@ namespace SampleCharacterMod.Adventures
                     .IgnoreUnmatchedProperties()
                     .Build();
                 var result = deserializer.Deserialize<Dictionary<string, EventLocData>>(yaml);
-                BepinexPlugin.log.LogInfo($"[AdventureEventLocalize] 已加载 {path}，共 {result?.Count ?? 0} 个事件");
+                BepinexPlugin.log.LogInfo($"[AdventureEventLocalize] 已加载 {Path.GetFileName(path)}，共 {result?.Count ?? 0} 个事件");
                 return result ?? new Dictionary<string, EventLocData>();
             }
             catch (Exception e)

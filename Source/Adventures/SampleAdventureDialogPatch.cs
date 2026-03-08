@@ -5,7 +5,6 @@ using LBoL.Core;
 using LBoL.Core.Adventures;
 using LBoL.Core.Battle.Interactions;
 using LBoL.Core.Cards;
-using LBoL.Core.Dialogs;
 using LBoL.Core.Stations;
 using LBoL.Presentation;
 using LBoL.Presentation.UI;
@@ -277,16 +276,14 @@ namespace SampleCharacterMod.Adventures
         // ----------------------------------------------------------------
         // 奖励 D：使用游戏原生 SelectCardPanel 选卡
         //
-        // 流程：
+        // 流程（与 SampleCharacterDiscover 卡牌相同的方式）：
         //   1. 通过 RollCards 获取随机 Card 实例列表
-        //   2. 创建 DialogStorage + 调用 adventure.SetStorage
-        //   3. 调用 adventure.SelectCards(cardIds) → 第一次 MoveNext 获得
-        //      MiniSelectCardInteraction（与觉医生选卡事件相同的交互对象）
-        //   4. 通过 UiManager.Instance.GetPanel<SelectCardPanel>() 获取面板
-        //   5. 驱动 SelectCardPanel.ViewMiniSelect(interaction)
-        //      → 显示原生选卡面板（完整卡牌信息，可悬停查看详情）
-        //   6. 面板完成后，interaction.SelectedCard 即玩家选定的卡
-        //   7. 调用 adventure.GainCards 将卡加入牌库
+        //   2. 直接用 Card[] 创建 MiniSelectCardInteraction(array, false, false, false)
+        //      — 与 SampleCharacterDiscover 完全一致，卡牌详情可悬停查看
+        //   3. 通过 UiManager.GetPanel<SelectCardPanel>() 获取面板
+        //   4. 驱动 SelectCardPanel.ViewMiniSelect(interaction)
+        //   5. 面板完成后，interaction.SelectedCard 即玩家选定的卡
+        //   6. 调用 adventure.GainCards 将卡加入牌库
         //
         //   降级：若原生面板获取失败，退回 IMGUI 按钮选卡（兜底）
         // ----------------------------------------------------------------
@@ -331,46 +328,27 @@ namespace SampleCharacterMod.Adventures
                 yield break;
             }
 
-            // --- 步骤 2-5：尝试使用原生 SelectCardPanel 选卡 ---
-            // Adventure.SelectCards(string[]) 是 IEnumerator：
-            //   MoveNext() 第一次 → 创建 MiniSelectCardInteraction 并 yield 出来
-            //   VnPanel 收到后调用 SelectCardPanel.ViewMiniSelect(interaction)
-            //   我们绕过了 VnPanel，因此手动完成这个过程
-
-            IEnumerator selectCoroutine = null;
+            // --- 步骤 2-4：直接创建 MiniSelectCardInteraction + 驱动原生面板 ---
+            // 与 SampleCharacterDiscover 相同：new MiniSelectCardInteraction(array, false, false, false)
+            // 不经过 adventure.SelectCards / DialogStorage，避免中间层重建卡实例
             MiniSelectCardInteraction interaction = null;
             IEnumerator viewCoroutine = null;
             bool useNativePanel = false;
 
             try
             {
-                // 2a. 创建 DialogStorage（SelectCards 内部会向 Storage 写入选定卡 ID）
-                var storage = new DialogStorage();
-                adventure.SetStorage(storage);
+                interaction = new MiniSelectCardInteraction(cards, false, false, false);
 
-                // 2b. 调用 SelectCards，第一次 MoveNext 会 yield 出 MiniSelectCardInteraction
-                string[] cardIds = cards.Select(c => c.Id).ToArray();
-                selectCoroutine = adventure.SelectCards(cardIds);
-                if (selectCoroutine.MoveNext())
+                var scPanel = UiManager.GetPanel<SelectCardPanel>();
+                if (scPanel != null)
                 {
-                    interaction = selectCoroutine.Current as MiniSelectCardInteraction;
+                    viewCoroutine = scPanel.ViewMiniSelect(interaction);
+                    useNativePanel = true;
+                    BepinexPlugin.log.LogInfo("[SampleCustomEvent] 使用原生 SelectCardPanel 选卡");
                 }
-
-                // 2c. 获取 SelectCardPanel（在整个游戏局内常驻，包括冒险阶段）
-                if (interaction != null)
+                else
                 {
-                    // UiManager.GetPanel<T>() 是静态方法，直接通过类名调用
-                    var scPanel = UiManager.GetPanel<SelectCardPanel>();
-                    if (scPanel != null)
-                    {
-                        viewCoroutine = scPanel.ViewMiniSelect(interaction);
-                        useNativePanel = true;
-                        BepinexPlugin.log.LogInfo("[SampleCustomEvent] 使用原生 SelectCardPanel 选卡");
-                    }
-                    else
-                    {
-                        BepinexPlugin.log.LogWarning("[SampleCustomEvent] SelectCardPanel 未找到，退回 IMGUI");
-                    }
+                    BepinexPlugin.log.LogWarning("[SampleCustomEvent] SelectCardPanel 未找到，退回 IMGUI");
                 }
             }
             catch (Exception e)
@@ -381,7 +359,7 @@ namespace SampleCharacterMod.Adventures
 
             if (useNativePanel && viewCoroutine != null)
             {
-                // --- 步骤 5：驱动原生选卡面板协程 ---
+                // --- 步骤 4：驱动原生选卡面板协程 ---
                 bool keepDriving = true;
                 while (keepDriving)
                 {
@@ -396,14 +374,10 @@ namespace SampleCharacterMod.Adventures
                         BepinexPlugin.log.LogWarning("[SampleCustomEvent] ViewMiniSelect 执行异常: " + e.Message);
                         keepDriving = false;
                     }
-                    // yield 在 try-catch 外，满足 C# 规则
                     if (moved) yield return viewCoroutine.Current;
                 }
 
-                // --- 步骤 6：恢复 SelectCards 协程（让它完成内部清理/存储结果）---
-                try { selectCoroutine.MoveNext(); } catch { }
-
-                // --- 步骤 7：将玩家选定的卡加入牌库 ---
+                // --- 步骤 5-6：取结果并加入牌库 ---
                 var selectedCard = interaction.SelectedCard;
                 if (selectedCard != null)
                 {
@@ -415,7 +389,6 @@ namespace SampleCharacterMod.Adventures
                 }
                 else
                 {
-                    // 玩家未选择（理论上 MiniSelect 不能取消，但做兜底）
                     BepinexPlugin.log.LogWarning("[SampleCustomEvent] 未选定卡牌，改发金币");
                     adventure.GainMoney(SampleCustomEvent.MoneyReward / 2);
                 }
