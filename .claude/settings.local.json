@@ -18,7 +18,17 @@
       "Bash(where python:*)",
       "Bash(cmd.exe:*)",
       "Bash($bytes =:*)",
-      "Bash(/tmp/scan_exact_api.ps1:*)"
+      "Bash(/tmp/scan_exact_api.ps1:*)",
+      "Bash(/tmp/scan_lbol4.ps1:*)",
+      "Bash(/tmp/scan_lbol5.ps1:*)",
+      "Bash(/tmp/scan_lbol6.ps1:*)",
+      "Bash(/tmp/scan_lbol7.ps1:*)",
+      "Bash(/tmp/scan_lbol8.ps1:*)",
+      "Bash(/tmp/scan_lbol9.ps1:*)",
+      "Bash(/tmp/scan_ns.ps1:*)",
+      "Bash(/tmp/scan_ns2.ps1:*)",
+      "Bash(/tmp/scan_ns3.ps1:*)",
+      "Bash(/tmp/scan_ds.ps1:*)"
     ]
   }
 }

@@ -124,54 +124,62 @@ namespace SampleCharacterMod
             float sw = Screen.width;
             float sh = Screen.height;
 
-            // 背景图（若已加载）
+            // ---- 右半屏：背景图 ----
+            float rightX = sw * 0.5f;
+            float rightW = sw * 0.5f;
             if (pendingChoiceBackground != null)
             {
-                GUI.DrawTexture(new Rect(0, 0, sw, sh), pendingChoiceBackground, ScaleMode.ScaleAndCrop);
+                GUI.DrawTexture(new Rect(rightX, 0, rightW, sh), pendingChoiceBackground, ScaleMode.ScaleAndCrop);
             }
 
-            // 半透明遮罩，提升文字可读性
-            GUI.color = new Color(0f, 0f, 0f, 0.65f);
-            GUI.DrawTexture(new Rect(0, 0, sw, sh), Texture2D.whiteTexture);
+            // ---- 左半屏：深色遮罩面板 ----
+            float leftW = sw * 0.5f;
+            GUI.color = new Color(0f, 0f, 0f, 0.72f);
+            GUI.DrawTexture(new Rect(0, 0, leftW, sh), Texture2D.whiteTexture);
             GUI.color = Color.white;
 
-            // 事件描述文本
+            // ---- 左半屏：事件描述文本（左下区域，紧贴选项上方） ----
+            var options = pendingChoiceOptions; // 防止中途被置 null
+            if (options == null) return;
+
+            float btnW = Mathf.Min(leftW - 60f, 520f);
+            float btnH = 58f;
+            float gap  = 14f;
+            float totalBtnH = options.Length * btnH + (options.Length - 1) * gap;
+            float panelPadding = 30f;
+
+            // 按钮区域：从底部向上留 padding，紧贴底部
+            float btnsStartY = sh - panelPadding - totalBtnH;
+            float btnsStartX = (leftW - btnW) * 0.5f;
+
+            // 描述文本区域：在按钮上方
             if (!string.IsNullOrEmpty(pendingChoiceDescription))
             {
                 var descStyle = new GUIStyle(GUI.skin.label)
                 {
-                    fontSize = 20,
-                    alignment = TextAnchor.MiddleCenter,
+                    fontSize = 18,
+                    alignment = TextAnchor.LowerLeft,
                     wordWrap = true,
                 };
                 descStyle.normal.textColor = new Color(1f, 0.95f, 0.8f);
-                float descW = sw * 0.75f;
-                float descH = 140f;
-                float descX = (sw - descW) * 0.5f;
-                float descY = sh * 0.18f;
-                GUI.Label(new Rect(descX, descY, descW, descH), pendingChoiceDescription, descStyle);
+                float descH = 110f;
+                float descY = btnsStartY - descH - 16f;
+                float descX = btnsStartX;
+                GUI.Label(new Rect(descX, descY, btnW, descH), pendingChoiceDescription, descStyle);
             }
 
-            // 选项按钮
-            var options = pendingChoiceOptions; // 防止中途被置 null 导致长度变化
-            if (options == null) return;
-
-            float btnW = Mathf.Min(620f, sw * 0.7f);
-            float btnH = 62f;
-            float gap  = 16f;
-            float totalH = options.Length * btnH + (options.Length - 1) * gap;
-            float startY = (sh - totalH) * 0.5f + sh * 0.08f; // 稍微偏下，给描述留空间
-            float startX = (sw - btnW) * 0.5f;
-
+            // ---- 左半屏：选项按钮 ----
             var btnStyle = new GUIStyle(GUI.skin.button)
             {
-                fontSize = 21,
-                alignment = TextAnchor.MiddleCenter,
+                fontSize = 19,
+                alignment = TextAnchor.MiddleLeft,
             };
+            btnStyle.padding.left = 16;
 
             for (int i = 0; i < options.Length; i++)
             {
-                if (GUI.Button(new Rect(startX, startY + i * (btnH + gap), btnW, btnH), options[i], btnStyle))
+                float btnY = btnsStartY + i * (btnH + gap);
+                if (GUI.Button(new Rect(btnsStartX, btnY, btnW, btnH), options[i], btnStyle))
                 {
                     pendingChoiceResult = i;
                     pendingChoiceOptions = null; // 隐藏界面
