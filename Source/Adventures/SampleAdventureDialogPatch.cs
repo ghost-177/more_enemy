@@ -14,6 +14,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using SampleCharacterMod;
+using SampleCharacterMod.Adventures;
 using UnityEngine;
 
 namespace SampleCharacterMod.Adventures
@@ -468,12 +470,18 @@ namespace SampleCharacterMod.Adventures
                     {
                         var bytes = new byte[stream.Length];
                         stream.Read(bytes, 0, bytes.Length);
-                        var tex = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+                        // RGB24：忽略 Alpha 通道，避免 PNG 透明区域在 IMGUI 里渲染为黑色
+                        var tex = new Texture2D(2, 2, TextureFormat.RGB24, false);
                         if (tex.LoadImage(bytes))
                         {
+                            // 裁剪黑边：找出非黑色内容的实际边界，生成裁剪后纹理。
+                            // 同时将所有像素 alpha 置为 1，消除透明区域渲染为黑色的问题。
+                            tex = TrimBlackBorders(tex);
+
                             _cachedBackground = tex;
                             BepinexPlugin.pendingChoiceBackground = _cachedBackground;
-                            BepinexPlugin.log.LogInfo("[SampleCustomEvent] 背景图加载成功");
+                            BepinexPlugin.log.LogInfo(
+                                $"[SampleCustomEvent] 背景图加载成功：{tex.width}x{tex.height} format={tex.format}");
                         }
                         else
                         {
@@ -492,11 +500,80 @@ namespace SampleCharacterMod.Adventures
                 BepinexPlugin.log.LogWarning("[SampleCustomEvent] 背景图加载失败: " + e.Message);
             }
         }
+
+        // ----------------------------------------------------------------
+        // 裁剪黑边：检测图片四边中纯黑/透明的行列并裁去，返回裁剪后的新纹理。
+        // threshold：亮度低于此值时视为黑边像素（0~1）。
+        // ----------------------------------------------------------------
+        static Texture2D TrimBlackBorders(Texture2D src, float threshold = 0.06f)
+        {
+            int w = src.width, h = src.height;
+            Color[] pixels;
+            try { pixels = src.GetPixels(); }
+            catch { return src; }
+
+            // 强制所有像素不透明（消除 PNG alpha 透明区渲染为黑的问题）
+            for (int i = 0; i < pixels.Length; i++)
+                pixels[i].a = 1f;
+            src.SetPixels(pixels);
+            src.Apply(false);
+
+            // 判断某像素是否为"黑边"：r/g/b 均低于阈值
+            bool IsBlack(Color c) => c.r < threshold && c.g < threshold && c.b < threshold;
+
+            // 逐边扫描，找到第一行/列含非黑像素的位置
+            // Unity 纹理 y=0 在底部，但只要四边对称裁剪就不影响结果
+            int top = 0, bottom = h - 1, left = 0, right = w - 1;
+
+            // 上边（y 从高到低）
+            for (int y = h - 1; y >= 0; y--)
+            {
+                bool rowBlack = true;
+                for (int x = 0; x < w; x++) if (!IsBlack(pixels[y * w + x])) { rowBlack = false; break; }
+                if (!rowBlack) { top = y; break; }
+            }
+            // 下边（y 从低到高）
+            for (int y = 0; y < h; y++)
+            {
+                bool rowBlack = true;
+                for (int x = 0; x < w; x++) if (!IsBlack(pixels[y * w + x])) { rowBlack = false; break; }
+                if (!rowBlack) { bottom = y; break; }
+            }
+            // 左边
+            for (int x = 0; x < w; x++)
+            {
+                bool colBlack = true;
+                for (int y = 0; y < h; y++) if (!IsBlack(pixels[y * w + x])) { colBlack = false; break; }
+                if (!colBlack) { left = x; break; }
+            }
+            // 右边
+            for (int x = w - 1; x >= 0; x--)
+            {
+                bool colBlack = true;
+                for (int y = 0; y < h; y++) if (!IsBlack(pixels[y * w + x])) { colBlack = false; break; }
+                if (!colBlack) { right = x; break; }
+            }
+
+            int newW = right - left + 1;
+            int newH = top - bottom + 1;
+
+            // 无需裁剪或裁剪后尺寸无效
+            if (newW <= 0 || newH <= 0 || (newW == w && newH == h)) return src;
+
+            BepinexPlugin.log.LogInfo(
+                $"[SampleCustomEvent] 裁剪黑边：原始 {w}x{h} → 裁剪后 {newW}x{newH}  (left={left} right={right} bottom={bottom} top={top})");
+
+            var cropped = new Texture2D(newW, newH, src.format, false);
+            cropped.SetPixels(src.GetPixels(left, bottom, newW, newH));
+            cropped.Apply(false);
+            return cropped;
+        }
     }
 
     // =====================================================================
     // 调试辅助：强制下一个 Adventure 节点触发自定义事件（F6 快捷键）
     // =====================================================================
+
     internal static class SampleAdventureDebugHelper
     {
         public static void ForceNextAdventure(GameRunController gameRun)

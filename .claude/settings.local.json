@@ -30,7 +30,8 @@
       "Bash(/tmp/scan_ns3.ps1:*)",
       "Bash(/tmp/scan_ds.ps1:*)",
       "Bash(/tmp/scan_finish.ps1:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(grep:*)"
     ]
   }
 }
