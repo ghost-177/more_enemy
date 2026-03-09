@@ -50,7 +50,7 @@ namespace SampleCharacterMod.Adventures
             // 主持人 NPC 的 ID（使用游戏内已有角色 ID）。
             // 留空时游戏使用默认/无角色外观。
             // 可填入如 "Rumia", "Mystia", "Mike" 等游戏内角色 ID。
-            config.HostId = "";
+            config.HostId = "Rumia";
 
             // 第二主持人（可选，留空即只有一位 NPC）
             config.HostId2 = "";

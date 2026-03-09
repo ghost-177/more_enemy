@@ -125,18 +125,20 @@ namespace SampleCharacterMod
             float sh = Screen.height;
 
             // ---- 右半屏：背景图 ----
-            float rightX = sw * 0.5f;
-            float rightW = sw * 0.5f;
+            float rightX = sw * 0.6f;
+            float rightW = sw * 0.3f;
+            float rightY = sh * 0.25f;    // Y位置：距离顶部35%处（让图片居中）
+            float rightH = sh * 0.4f;     // 高度为屏幕的30%
             if (pendingChoiceBackground != null)
             {
-                GUI.DrawTexture(new Rect(rightX, 0, rightW, sh), pendingChoiceBackground, ScaleMode.ScaleAndCrop);
+                GUI.DrawTexture(new Rect(rightX, rightY, rightW, rightH), pendingChoiceBackground, ScaleMode.StretchToFill);
             }
 
             // ---- 左半屏：深色遮罩面板 ----
             float leftW = sw * 0.5f;
-            GUI.color = new Color(0f, 0f, 0f, 0.72f);
-            GUI.DrawTexture(new Rect(0, 0, leftW, sh), Texture2D.whiteTexture);
-            GUI.color = Color.white;
+            // GUI.color = new Color(0f, 0f, 0f, 0.72f);
+            // GUI.DrawTexture(new Rect(0, 0, leftW, sh), Texture2D.whiteTexture);
+            // GUI.color = Color.white;
 
             // ---- 左半屏：事件描述文本（左下区域，紧贴选项上方） ----
             var options = pendingChoiceOptions; // 防止中途被置 null
