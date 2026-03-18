@@ -10,7 +10,7 @@
 
     <PropertyGroup>
         <!-- Change this path !!!-->
-        <GameFolder>D:\Program FIles\Steam\steamapps\common\LBoL</GameFolder>
+        <GameFolder>D:\software\steam\steamapps\common\LBoL</GameFolder>
         <BepInExFolder>$(GameFolder)\BepInEx</BepInExFolder>
         <RootNamespace>SampleCharacterMod_windows</RootNamespace>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
