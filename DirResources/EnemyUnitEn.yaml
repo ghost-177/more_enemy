@@ -96,3 +96,50 @@ Suwako:
   - 'Earthquake'
   - 'Earth Barrier'
   - 'Iron Rings'
+
+# ---- Act 3 Normal Enemies ----
+
+HiganbanaWraith:
+  Title: 'Higanbana Wraith'
+  Move:
+  - 'Soul Drain'
+  - 'Spirit Veil'
+
+YoumuPhantom:
+  Title: 'Youmu Phantom'
+  Move:
+  - 'Human Blade Strike'
+  - 'Half-Phantom Slash'
+  - 'Phantom Guard'
+
+NetherMessenger:
+  Title: 'Nether Messenger'
+  Move:
+  - 'Verdict Strike'
+  - 'Nether Shield'
+
+# ---- Act 3 Elite Enemies ----
+
+Eiki:
+  Title: 'Shiki Eiki Yamaxanadu'
+  Move:
+  - 'Judgment'
+  - 'Verdict'
+  - 'Righteous Barrier'
+
+YuyukoElite:
+  Title: 'Saigyouji Yuyuko'
+  Move:
+  - 'Ghost Butterfly'
+  - 'Death Realm'
+  - 'Spectral Veil'
+
+# ---- Act 3 Boss ----
+
+Yuyuko:
+  Title: 'Saigyouji Yuyuko'
+  Move:
+  - 'Ghost Butterfly Dance'
+  - 'Spring Death in Full Bloom'
+  - 'Ghostly Barrier'
+  - 'Nether Barrier'
