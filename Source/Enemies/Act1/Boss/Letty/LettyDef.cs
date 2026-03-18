@@ -8,7 +8,7 @@ using EternalWinterMod.GunName;
 
 namespace EternalWinterMod.Enemies.Act1
 {
-    public sealed class LettyDef : SampleCharacterEnemyUnitTemplate
+    public sealed class LettyEWDef : SampleCharacterEnemyUnitTemplate
     {
         public override EnemyUnitConfig MakeConfig()
         {

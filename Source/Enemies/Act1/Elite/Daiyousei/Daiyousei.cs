@@ -6,7 +6,7 @@ using LBoLEntitySideloader.Attributes;
 
 namespace EternalWinterMod.Enemies.Act1
 {
-    [EntityLogic(typeof(DaiyouseiDef))]
+    [EntityLogic(typeof(DaiyouseiEWDef))]
     public sealed class Daiyousei : EnemyUnit
     {
         // AI 节奏：攻击1 → 攻击1 → 防御 → 强攻击2 → 循环（4回合周期）

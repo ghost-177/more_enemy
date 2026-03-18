@@ -6,7 +6,7 @@ using LBoLEntitySideloader.Attributes;
 
 namespace EternalWinterMod.Enemies.Act2
 {
-    [EntityLogic(typeof(KappaMechanicDef))]
+    [EntityLogic(typeof(KappaMechanicEWDef))]
     public sealed class KappaMechanic : EnemyUnit
     {
         // AI 节奏：普通弹射 → 蓄力炮击（2回合周期，纯输出）

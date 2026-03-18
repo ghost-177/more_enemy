@@ -6,7 +6,7 @@ using LBoLEntitySideloader.Attributes;
 
 namespace EternalWinterMod.Enemies.Act2
 {
-    [EntityLogic(typeof(MountainFairyDef))]
+    [EntityLogic(typeof(MountainFairyEWDef))]
     public sealed class MountainFairy : EnemyUnit
     {
         // AI 节奏：防御 → 攻击 → 攻击（3回合周期，先手防御）

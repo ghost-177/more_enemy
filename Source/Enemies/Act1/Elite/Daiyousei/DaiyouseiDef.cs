@@ -8,7 +8,7 @@ using EternalWinterMod.GunName;
 
 namespace EternalWinterMod.Enemies.Act1
 {
-    public sealed class DaiyouseiDef : SampleCharacterEnemyUnitTemplate
+    public sealed class DaiyouseiEWDef : SampleCharacterEnemyUnitTemplate
     {
         public override EnemyUnitConfig MakeConfig()
         {

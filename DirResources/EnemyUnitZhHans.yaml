@@ -8,18 +8,18 @@ SampleCharacterMod:
 
 # ---- 第一幕 普通敌人 ----
 
-Yukidouji:
+YukidoujiEW:
   Title: '雪童子'
   Move:
   - '冰霜弹'
   - '冰盾'
 
-MaiyoTsuki:
+MaiyoTsukiEW:
   Title: '迷途月兔'
   Move:
   - '快速一击'
 
-MeikaiChorei:
+MeikaiChoreiEW:
   Title: '冥界蝶灵'
   Move:
   - '灵体触碰'
@@ -27,14 +27,14 @@ MeikaiChorei:
 
 # ---- 第一幕 精英 ----
 
-Daiyousei:
+DaiyouseiEW:
   Title: '大妖精'
   Move:
   - '妖精魔法'
   - '光辉爆发'
   - '妖精盾'
 
-Kaguya:
+KaguyaEW:
   Title: '蓬莱山辉夜'
   Move:
   - '蓬莱仙药'
@@ -43,7 +43,7 @@ Kaguya:
 
 # ---- 第一幕 Boss ----
 
-Letty:
+LettyEW:
   Title: '蕾蒂·霍瓦多'
   Move:
   - '冰弹连射'
@@ -53,19 +53,19 @@ Letty:
 
 # ---- 第二幕 普通敌人 ----
 
-TenguScout:
+TenguScoutEW:
   Title: '天狗斥候'
   Move:
   - '风刃斩'
   - '戒备姿态'
 
-KappaMechanic:
+KappaMechanicEW:
   Title: '河童机工'
   Move:
   - '弹射装置'
   - '动力炮击'
 
-MountainFairy:
+MountainFairyEW:
   Title: '山灵缚仙'
   Move:
   - '束缚咒'
@@ -73,14 +73,14 @@ MountainFairy:
 
 # ---- 第二幕 精英 ----
 
-Momiji:
+MomijiEW:
   Title: '犬走椛'
   Move:
   - '刀击'
   - '速斩'
   - '盾守'
 
-Kanako:
+KanakoEW:
   Title: '八坂神奈子'
   Move:
   - '神风'
@@ -89,7 +89,7 @@ Kanako:
 
 # ---- 第二幕 Boss ----
 
-Suwako:
+SuwakoEW:
   Title: '洩矢诹访子'
   Move:
   - '蛙击'
@@ -99,20 +99,20 @@ Suwako:
 
 # ---- 第三幕 普通敌人 ----
 
-HiganbanaWraith:
+HiganbanaWraithEW:
   Title: '彼岸亡灵'
   Move:
   - '夺魂'
   - '幽灵薄纱'
 
-YoumuPhantom:
+YoumuPhantomEW:
   Title: '魂魄妖梦'
   Move:
   - '人刀击'
   - '幽灵半身斩'
   - '幽幻防御'
 
-NetherMessenger:
+NetherMessengerEW:
   Title: '幽冥使者'
   Move:
   - '裁决一击'
@@ -120,14 +120,14 @@ NetherMessenger:
 
 # ---- 第三幕 精英 ----
 
-Eiki:
+EikiEW:
   Title: '四季映姬·亚马沙纳度'
   Move:
   - '审判'
   - '裁决'
   - '公正防壁'
 
-YuyukoElite:
+YuyukoEliteEW:
   Title: '西行寺幽幽子'
   Move:
   - '幽灵蝶'
@@ -136,7 +136,7 @@ YuyukoElite:
 
 # ---- 第三幕 Boss ----
 
-Yuyuko:
+YuyukoEW:
   Title: '西行寺幽幽子'
   Move:
   - '幽灵蝶舞'

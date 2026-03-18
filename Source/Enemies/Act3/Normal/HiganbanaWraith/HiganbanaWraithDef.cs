@@ -8,7 +8,7 @@ using EternalWinterMod.GunName;
 
 namespace EternalWinterMod.Enemies.Act3
 {
-    public sealed class HiganbanaWraithDef : SampleCharacterEnemyUnitTemplate
+    public sealed class HiganbanaWraithEWDef : SampleCharacterEnemyUnitTemplate
     {
         public override EnemyUnitConfig MakeConfig()
         {

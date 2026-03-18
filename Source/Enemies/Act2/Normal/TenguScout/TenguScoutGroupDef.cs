@@ -7,13 +7,13 @@ using EternalWinterMod.Enemies.Template;
 
 namespace EternalWinterMod.Enemies.Act2
 {
-    public sealed class TenguScoutGroupDef : SampleCharacterEnemyGroupTemplate
+    public sealed class TenguScoutEWGroupDef : SampleCharacterEnemyGroupTemplate
     {
         public override EnemyGroupConfig MakeConfig()
         {
             EnemyGroupConfig config = GetEnemyGroupDefaultConfig();
             config.FormationName = VanillaFormations.Single;
-            config.Enemies = new List<string>() { nameof(TenguScout) };
+            config.Enemies = new List<string>() { "TenguScoutEW" };
             config.EnemyType = EnemyType.Normal;
             config.RollBossExhibit = false;
             return config;

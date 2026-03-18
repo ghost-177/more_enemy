@@ -8,7 +8,7 @@ using EternalWinterMod.GunName;
 
 namespace EternalWinterMod.Enemies.Act1
 {
-    public sealed class KaguyaDef : SampleCharacterEnemyUnitTemplate
+    public sealed class KaguyaEWDef : SampleCharacterEnemyUnitTemplate
     {
         public override EnemyUnitConfig MakeConfig()
         {

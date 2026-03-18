@@ -8,7 +8,7 @@ using EternalWinterMod.GunName;
 
 namespace EternalWinterMod.Enemies.Act1
 {
-    public sealed class MeikaiChoreiDef : SampleCharacterEnemyUnitTemplate
+    public sealed class MeikaiChoreiEWDef : SampleCharacterEnemyUnitTemplate
     {
         public override EnemyUnitConfig MakeConfig()
         {

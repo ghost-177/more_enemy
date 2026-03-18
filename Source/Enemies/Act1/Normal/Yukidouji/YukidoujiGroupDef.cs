@@ -7,13 +7,13 @@ using EternalWinterMod.Enemies.Template;
 
 namespace EternalWinterMod.Enemies.Act1
 {
-    public sealed class YukidoujiGroupDef : SampleCharacterEnemyGroupTemplate
+    public sealed class YukidoujiEWGroupDef : SampleCharacterEnemyGroupTemplate
     {
         public override EnemyGroupConfig MakeConfig()
         {
             EnemyGroupConfig config = GetEnemyGroupDefaultConfig();
             config.FormationName = VanillaFormations.Single;
-            config.Enemies = new List<string>() { nameof(Yukidouji) };
+            config.Enemies = new List<string>() { "YukidoujiEW" };
             config.EnemyType = EnemyType.Normal;
             config.RollBossExhibit = false;
             return config;

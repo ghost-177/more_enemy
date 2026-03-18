@@ -9,7 +9,7 @@ using EternalWinterMod.GunName;
 namespace EternalWinterMod.Enemies.Act3
 {
     // 魂魄妖梦——精英前置小怪版，较精英版数值偏低
-    public sealed class YoumuPhantomDef : SampleCharacterEnemyUnitTemplate
+    public sealed class YoumuPhantomEWDef : SampleCharacterEnemyUnitTemplate
     {
         public override EnemyUnitConfig MakeConfig()
         {

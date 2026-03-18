@@ -8,7 +8,7 @@ using EternalWinterMod.GunName;
 
 namespace EternalWinterMod.Enemies.Act2
 {
-    public sealed class KappaMechanicDef : SampleCharacterEnemyUnitTemplate
+    public sealed class KappaMechanicEWDef : SampleCharacterEnemyUnitTemplate
     {
         public override EnemyUnitConfig MakeConfig()
         {

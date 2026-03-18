@@ -7,13 +7,13 @@ using EternalWinterMod.Enemies.Template;
 
 namespace EternalWinterMod.Enemies.Act3
 {
-    public sealed class YoumuPhantomGroupDef : SampleCharacterEnemyGroupTemplate
+    public sealed class YoumuPhantomEWGroupDef : SampleCharacterEnemyGroupTemplate
     {
         public override EnemyGroupConfig MakeConfig()
         {
             EnemyGroupConfig config = GetEnemyGroupDefaultConfig();
             config.FormationName = VanillaFormations.Single;
-            config.Enemies = new List<string>() { nameof(YoumuPhantom) };
+            config.Enemies = new List<string>() { "YoumuPhantomEW" };
             config.EnemyType = EnemyType.Normal;
             config.RollBossExhibit = false;
             return config;

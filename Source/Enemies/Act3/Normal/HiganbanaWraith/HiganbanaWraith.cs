@@ -6,7 +6,7 @@ using LBoLEntitySideloader.Attributes;
 
 namespace EternalWinterMod.Enemies.Act3
 {
-    [EntityLogic(typeof(HiganbanaWraithDef))]
+    [EntityLogic(typeof(HiganbanaWraithEWDef))]
     public sealed class HiganbanaWraith : EnemyUnit
     {
         // AI 节奏：攻击 → 防御 → 攻击 → 攻击（4回合周期）

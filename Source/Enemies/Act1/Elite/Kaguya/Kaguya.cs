@@ -6,7 +6,7 @@ using LBoLEntitySideloader.Attributes;
 
 namespace EternalWinterMod.Enemies.Act1
 {
-    [EntityLogic(typeof(KaguyaDef))]
+    [EntityLogic(typeof(KaguyaEWDef))]
     public sealed class Kaguya : EnemyUnit
     {
         // AI 节奏：主攻击 → 连击（×2）→ 防御 → 循环（3回合周期）

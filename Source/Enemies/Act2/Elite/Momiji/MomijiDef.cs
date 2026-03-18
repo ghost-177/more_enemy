@@ -8,7 +8,7 @@ using EternalWinterMod.GunName;
 
 namespace EternalWinterMod.Enemies.Act2
 {
-    public sealed class MomijiDef : SampleCharacterEnemyUnitTemplate
+    public sealed class MomijiEWDef : SampleCharacterEnemyUnitTemplate
     {
         public override EnemyUnitConfig MakeConfig()
         {

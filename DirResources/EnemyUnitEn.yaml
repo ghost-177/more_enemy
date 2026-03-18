@@ -8,18 +8,18 @@ SampleCharacterMod:
 
 # ---- Act 1 Normal Enemies ----
 
-Yukidouji:
+YukidoujiEW:
   Title: 'Snow Fairy'
   Move:
   - 'Frost Bolt'
   - 'Ice Barrier'
 
-MaiyoTsuki:
+MaiyoTsukiEW:
   Title: 'Lost Moon Rabbit'
   Move:
   - 'Quick Strike'
 
-MeikaiChorei:
+MeikaiChoreiEW:
   Title: 'Netherworld Butterfly Spirit'
   Move:
   - 'Spirit Touch'
@@ -27,14 +27,14 @@ MeikaiChorei:
 
 # ---- Act 1 Elite Enemies ----
 
-Daiyousei:
+DaiyouseiEW:
   Title: 'Great Fairy'
   Move:
   - 'Fairy Magic'
   - 'Radiant Burst'
   - 'Fairy Shield'
 
-Kaguya:
+KaguyaEW:
   Title: 'Kaguya Houraisan'
   Move:
   - 'Hourai Elixir'
@@ -43,7 +43,7 @@ Kaguya:
 
 # ---- Act 1 Boss ----
 
-Letty:
+LettyEW:
   Title: 'Letty Whiterock'
   Move:
   - 'Ice Barrage'
@@ -53,19 +53,19 @@ Letty:
 
 # ---- Act 2 Normal Enemies ----
 
-TenguScout:
+TenguScoutEW:
   Title: 'Tengu Scout'
   Move:
   - 'Wind Slash'
   - 'Guard Stance'
 
-KappaMechanic:
+KappaMechanicEW:
   Title: 'Kappa Mechanic'
   Move:
   - 'Gadget Shot'
   - 'Power Cannon'
 
-MountainFairy:
+MountainFairyEW:
   Title: 'Mountain Spirit Fairy'
   Move:
   - 'Binding Curse'
@@ -73,14 +73,14 @@ MountainFairy:
 
 # ---- Act 2 Elite Enemies ----
 
-Momiji:
+MomijiEW:
   Title: 'Inubashiri Momiji'
   Move:
   - 'Blade Slash'
   - 'Rapid Strike'
   - 'Shield Stance'
 
-Kanako:
+KanakoEW:
   Title: 'Yasaka Kanako'
   Move:
   - 'Divine Wind'
@@ -89,7 +89,7 @@ Kanako:
 
 # ---- Act 2 Boss ----
 
-Suwako:
+SuwakoEW:
   Title: 'Moriya Suwako'
   Move:
   - 'Frog Strike'
@@ -99,20 +99,20 @@ Suwako:
 
 # ---- Act 3 Normal Enemies ----
 
-HiganbanaWraith:
+HiganbanaWraithEW:
   Title: 'Higanbana Wraith'
   Move:
   - 'Soul Drain'
   - 'Spirit Veil'
 
-YoumuPhantom:
+YoumuPhantomEW:
   Title: 'Youmu Phantom'
   Move:
   - 'Human Blade Strike'
   - 'Half-Phantom Slash'
   - 'Phantom Guard'
 
-NetherMessenger:
+NetherMessengerEW:
   Title: 'Nether Messenger'
   Move:
   - 'Verdict Strike'
@@ -120,14 +120,14 @@ NetherMessenger:
 
 # ---- Act 3 Elite Enemies ----
 
-Eiki:
+EikiEW:
   Title: 'Shiki Eiki Yamaxanadu'
   Move:
   - 'Judgment'
   - 'Verdict'
   - 'Righteous Barrier'
 
-YuyukoElite:
+YuyukoEliteEW:
   Title: 'Saigyouji Yuyuko'
   Move:
   - 'Ghost Butterfly'
@@ -136,7 +136,7 @@ YuyukoElite:
 
 # ---- Act 3 Boss ----
 
-Yuyuko:
+YuyukoEW:
   Title: 'Saigyouji Yuyuko'
   Move:
   - 'Ghost Butterfly Dance'

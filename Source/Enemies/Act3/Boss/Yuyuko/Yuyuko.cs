@@ -6,7 +6,7 @@ using LBoLEntitySideloader.Attributes;
 
 namespace EternalWinterMod.Enemies.Act3
 {
-    [EntityLogic(typeof(YuyukoDef))]
+    [EntityLogic(typeof(YuyukoEWDef))]
     public sealed class Yuyuko : EnemyUnit
     {
         // AI 节奏：幽灵蝶舞 → 春死满开 → 防御 → 幽冥结界×Count1（4回合周期）

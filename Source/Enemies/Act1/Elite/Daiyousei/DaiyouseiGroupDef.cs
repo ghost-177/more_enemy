@@ -7,13 +7,13 @@ using EternalWinterMod.Enemies.Template;
 
 namespace EternalWinterMod.Enemies.Act1
 {
-    public sealed class DaiyouseiGroupDef : SampleCharacterEnemyGroupTemplate
+    public sealed class DaiyouseiEWGroupDef : SampleCharacterEnemyGroupTemplate
     {
         public override EnemyGroupConfig MakeConfig()
         {
             EnemyGroupConfig config = GetEnemyGroupDefaultConfig();
             config.FormationName = VanillaFormations.Single;
-            config.Enemies = new List<string>() { nameof(Daiyousei) };
+            config.Enemies = new List<string>() { "DaiyouseiEW" };
             config.EnemyType = EnemyType.Elite;
             config.RollBossExhibit = false;
             return config;

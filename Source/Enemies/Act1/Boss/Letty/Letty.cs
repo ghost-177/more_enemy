@@ -6,7 +6,7 @@ using LBoLEntitySideloader.Attributes;
 
 namespace EternalWinterMod.Enemies.Act1
 {
-    [EntityLogic(typeof(LettyDef))]
+    [EntityLogic(typeof(LettyEWDef))]
     public sealed class Letty : EnemyUnit
     {
         // AI 节奏（4回合周期）：

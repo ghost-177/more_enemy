@@ -7,7 +7,7 @@ using LBoLEntitySideloader.Attributes;
 
 namespace EternalWinterMod.Enemies.Act1
 {
-    [EntityLogic(typeof(YukidoujiDef))]
+    [EntityLogic(typeof(YukidoujiEWDef))]
     public sealed class Yukidouji : EnemyUnit
     {
         private enum MoveType

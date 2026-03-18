@@ -26,18 +26,18 @@ namespace EternalWinterMod.Enemies.Act1
             // ---- 普通敌人池（Act1 专用） ----
             // ID = 类名去掉末尾 "Def"，例如 YukidoujiGroupDef → "YukidoujiGroup"
             var normalPool = __instance.EnemyPoolAct1;
-            normalPool?.Add("YukidoujiGroup",    1f);
-            normalPool?.Add("MaiyoTsukiGroup",   1f);
-            normalPool?.Add("MeikaiChoreiGroup", 1f);
+            normalPool?.Add("YukidoujiEWGroup",    1f);
+            normalPool?.Add("MaiyoTsukiEWGroup",   1f);
+            normalPool?.Add("MeikaiChoreiEWGroup", 1f);
 
             // ---- 精英池 ----
             var elitePool = __instance.EliteEnemyPool;
-            elitePool?.Add("DaiyouseiGroup", 1f);
-            elitePool?.Add("KaguyaGroup",    1f);
+            elitePool?.Add("DaiyouseiEWGroup", 1f);
+            elitePool?.Add("KaguyaEWGroup",    1f);
 
             // ---- Boss 池 ----
             var bossPool = __instance.BossPool;
-            bossPool?.Add("LettyGroup", 1f);
+            bossPool?.Add("LettyEWGroup", 1f);
         }
     }
 }

@@ -6,7 +6,7 @@ using LBoLEntitySideloader.Attributes;
 
 namespace EternalWinterMod.Enemies.Act3
 {
-    [EntityLogic(typeof(YoumuPhantomDef))]
+    [EntityLogic(typeof(YoumuPhantomEWDef))]
     public sealed class YoumuPhantom : EnemyUnit
     {
         // AI 节奏：人刀击 → 幽灵半身斩×2 → 防御（3回合周期）

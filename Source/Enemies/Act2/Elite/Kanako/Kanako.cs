@@ -6,7 +6,7 @@ using LBoLEntitySideloader.Attributes;
 
 namespace EternalWinterMod.Enemies.Act2
 {
-    [EntityLogic(typeof(KanakoDef))]
+    [EntityLogic(typeof(KanakoEWDef))]
     public sealed class Kanako : EnemyUnit
     {
         // AI 节奏：神风 → 御柱 → 防御（3回合周期）

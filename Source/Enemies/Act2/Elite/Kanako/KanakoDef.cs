@@ -8,7 +8,7 @@ using EternalWinterMod.GunName;
 
 namespace EternalWinterMod.Enemies.Act2
 {
-    public sealed class KanakoDef : SampleCharacterEnemyUnitTemplate
+    public sealed class KanakoEWDef : SampleCharacterEnemyUnitTemplate
     {
         public override EnemyUnitConfig MakeConfig()
         {

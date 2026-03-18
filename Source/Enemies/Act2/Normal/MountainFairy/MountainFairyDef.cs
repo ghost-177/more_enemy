@@ -8,7 +8,7 @@ using EternalWinterMod.GunName;
 
 namespace EternalWinterMod.Enemies.Act2
 {
-    public sealed class MountainFairyDef : SampleCharacterEnemyUnitTemplate
+    public sealed class MountainFairyEWDef : SampleCharacterEnemyUnitTemplate
     {
         public override EnemyUnitConfig MakeConfig()
         {

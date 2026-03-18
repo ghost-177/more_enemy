@@ -8,7 +8,7 @@ using EternalWinterMod.GunName;
 
 namespace EternalWinterMod.Enemies.Act3
 {
-    public sealed class NetherMessengerDef : SampleCharacterEnemyUnitTemplate
+    public sealed class NetherMessengerEWDef : SampleCharacterEnemyUnitTemplate
     {
         public override EnemyUnitConfig MakeConfig()
         {

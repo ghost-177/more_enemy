@@ -8,7 +8,7 @@ using EternalWinterMod.GunName;
 
 namespace EternalWinterMod.Enemies.Act3
 {
-    public sealed class EikiDef : SampleCharacterEnemyUnitTemplate
+    public sealed class EikiEWDef : SampleCharacterEnemyUnitTemplate
     {
         public override EnemyUnitConfig MakeConfig()
         {

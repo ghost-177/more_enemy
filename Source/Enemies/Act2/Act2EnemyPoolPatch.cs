@@ -25,18 +25,18 @@ namespace EternalWinterMod.Enemies.Act2
 
             // ---- 普通敌人池（Act2 专用） ----
             var normalPool = __instance.EnemyPoolAct2;
-            normalPool?.Add("TenguScoutGroup",    1f);
-            normalPool?.Add("KappaMechanicGroup", 1f);
-            normalPool?.Add("MountainFairyGroup", 1f);
+            normalPool?.Add("TenguScoutEWGroup",    1f);
+            normalPool?.Add("KappaMechanicEWGroup", 1f);
+            normalPool?.Add("MountainFairyEWGroup", 1f);
 
             // ---- 精英池 ----
             var elitePool = __instance.EliteEnemyPool;
-            elitePool?.Add("MomijiGroup",  1f);
-            elitePool?.Add("KanakoGroup",  1f);
+            elitePool?.Add("MomijiEWGroup",  1f);
+            elitePool?.Add("KanakoEWGroup",  1f);
 
             // ---- Boss 池 ----
             var bossPool = __instance.BossPool;
-            bossPool?.Add("SuwakoGroup", 1f);
+            bossPool?.Add("SuwakoEWGroup", 1f);
         }
     }
 }

@@ -7,13 +7,13 @@ using EternalWinterMod.Enemies.Template;
 
 namespace EternalWinterMod.Enemies.Act3
 {
-    public sealed class HiganbanaWraithGroupDef : SampleCharacterEnemyGroupTemplate
+    public sealed class HiganbanaWraithEWGroupDef : SampleCharacterEnemyGroupTemplate
     {
         public override EnemyGroupConfig MakeConfig()
         {
             EnemyGroupConfig config = GetEnemyGroupDefaultConfig();
             config.FormationName = VanillaFormations.Single;
-            config.Enemies = new List<string>() { nameof(HiganbanaWraith) };
+            config.Enemies = new List<string>() { "HiganbanaWraithEW" };
             config.EnemyType = EnemyType.Normal;
             config.RollBossExhibit = false;
             return config;
