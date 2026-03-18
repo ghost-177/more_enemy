@@ -9,18 +9,18 @@ SampleCharacterMod:
 # ---- 第一幕 普通敌人 ----
 
 YukidoujiEW:
-  Title: '雪童子'
+  Title: '雪童子（EW）'
   Move:
   - '冰霜弹'
   - '冰盾'
 
 MaiyoTsukiEW:
-  Title: '迷途月兔'
+  Title: '迷途月兔（EW）'
   Move:
   - '快速一击'
 
 MeikaiChoreiEW:
-  Title: '冥界蝶灵'
+  Title: '冥界蝶灵（EW）'
   Move:
   - '灵体触碰'
   - '幽灵薄纱'
@@ -28,14 +28,14 @@ MeikaiChoreiEW:
 # ---- 第一幕 精英 ----
 
 DaiyouseiEW:
-  Title: '大妖精'
+  Title: '大妖精（EW）'
   Move:
   - '妖精魔法'
   - '光辉爆发'
   - '妖精盾'
 
 KaguyaEW:
-  Title: '蓬莱山辉夜'
+  Title: '蓬莱山辉夜（EW）'
   Move:
   - '蓬莱仙药'
   - '五难之请'
@@ -44,7 +44,7 @@ KaguyaEW:
 # ---- 第一幕 Boss ----
 
 LettyEW:
-  Title: '蕾蒂·霍瓦多'
+  Title: '蕾蒂·霍瓦多（EW）'
   Move:
   - '冰弹连射'
   - '极寒封冻'
@@ -54,19 +54,19 @@ LettyEW:
 # ---- 第二幕 普通敌人 ----
 
 TenguScoutEW:
-  Title: '天狗斥候'
+  Title: '天狗斥候（EW）'
   Move:
   - '风刃斩'
   - '戒备姿态'
 
 KappaMechanicEW:
-  Title: '河童机工'
+  Title: '河童机工（EW）'
   Move:
   - '弹射装置'
   - '动力炮击'
 
 MountainFairyEW:
-  Title: '山灵缚仙'
+  Title: '山灵缚仙（EW）'
   Move:
   - '束缚咒'
   - '灵气护盾'
@@ -74,14 +74,14 @@ MountainFairyEW:
 # ---- 第二幕 精英 ----
 
 MomijiEW:
-  Title: '犬走椛'
+  Title: '犬走椛（EW）'
   Move:
   - '刀击'
   - '速斩'
   - '盾守'
 
 KanakoEW:
-  Title: '八坂神奈子'
+  Title: '八坂神奈子（EW）'
   Move:
   - '神风'
   - '御柱'
@@ -90,7 +90,7 @@ KanakoEW:
 # ---- 第二幕 Boss ----
 
 SuwakoEW:
-  Title: '洩矢诹访子'
+  Title: '洩矢诹访子（EW）'
   Move:
   - '蛙击'
   - '大地震'
@@ -100,20 +100,20 @@ SuwakoEW:
 # ---- 第三幕 普通敌人 ----
 
 HiganbanaWraithEW:
-  Title: '彼岸亡灵'
+  Title: '彼岸亡灵（EW）'
   Move:
   - '夺魂'
   - '幽灵薄纱'
 
 YoumuPhantomEW:
-  Title: '魂魄妖梦'
+  Title: '魂魄妖梦（EW）'
   Move:
   - '人刀击'
   - '幽灵半身斩'
   - '幽幻防御'
 
 NetherMessengerEW:
-  Title: '幽冥使者'
+  Title: '幽冥使者（EW）'
   Move:
   - '裁决一击'
   - '冥界护盾'
@@ -121,14 +121,14 @@ NetherMessengerEW:
 # ---- 第三幕 精英 ----
 
 EikiEW:
-  Title: '四季映姬·亚马沙纳度'
+  Title: '四季映姬·亚马沙纳度（EW）'
   Move:
   - '审判'
   - '裁决'
   - '公正防壁'
 
 YuyukoEliteEW:
-  Title: '西行寺幽幽子'
+  Title: '西行寺幽幽子（EW）'
   Move:
   - '幽灵蝶'
   - '死亡领域'
@@ -137,7 +137,7 @@ YuyukoEliteEW:
 # ---- 第三幕 Boss ----
 
 YuyukoEW:
-  Title: '西行寺幽幽子'
+  Title: '西行寺幽幽子（EW）'
   Move:
   - '幽灵蝶舞'
   - '春死满开'

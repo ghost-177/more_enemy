@@ -9,18 +9,18 @@ SampleCharacterMod:
 # ---- Act 1 Normal Enemies ----
 
 YukidoujiEW:
-  Title: 'Snow Fairy'
+  Title: 'Snow Fairy (EW)'
   Move:
   - 'Frost Bolt'
   - 'Ice Barrier'
 
 MaiyoTsukiEW:
-  Title: 'Lost Moon Rabbit'
+  Title: 'Lost Moon Rabbit (EW)'
   Move:
   - 'Quick Strike'
 
 MeikaiChoreiEW:
-  Title: 'Netherworld Butterfly Spirit'
+  Title: 'Netherworld Butterfly Spirit (EW)'
   Move:
   - 'Spirit Touch'
   - 'Ghostly Veil'
@@ -28,14 +28,14 @@ MeikaiChoreiEW:
 # ---- Act 1 Elite Enemies ----
 
 DaiyouseiEW:
-  Title: 'Great Fairy'
+  Title: 'Great Fairy (EW)'
   Move:
   - 'Fairy Magic'
   - 'Radiant Burst'
   - 'Fairy Shield'
 
 KaguyaEW:
-  Title: 'Kaguya Houraisan'
+  Title: 'Kaguya Houraisan (EW)'
   Move:
   - 'Hourai Elixir'
   - 'Five Impossible Requests'
@@ -44,7 +44,7 @@ KaguyaEW:
 # ---- Act 1 Boss ----
 
 LettyEW:
-  Title: 'Letty Whiterock'
+  Title: 'Letty Whiterock (EW)'
   Move:
   - 'Ice Barrage'
   - 'Perfect Freeze'
@@ -54,19 +54,19 @@ LettyEW:
 # ---- Act 2 Normal Enemies ----
 
 TenguScoutEW:
-  Title: 'Tengu Scout'
+  Title: 'Tengu Scout (EW)'
   Move:
   - 'Wind Slash'
   - 'Guard Stance'
 
 KappaMechanicEW:
-  Title: 'Kappa Mechanic'
+  Title: 'Kappa Mechanic (EW)'
   Move:
   - 'Gadget Shot'
   - 'Power Cannon'
 
 MountainFairyEW:
-  Title: 'Mountain Spirit Fairy'
+  Title: 'Mountain Spirit Fairy (EW)'
   Move:
   - 'Binding Curse'
   - 'Spirit Barrier'
@@ -74,14 +74,14 @@ MountainFairyEW:
 # ---- Act 2 Elite Enemies ----
 
 MomijiEW:
-  Title: 'Inubashiri Momiji'
+  Title: 'Inubashiri Momiji (EW)'
   Move:
   - 'Blade Slash'
   - 'Rapid Strike'
   - 'Shield Stance'
 
 KanakoEW:
-  Title: 'Yasaka Kanako'
+  Title: 'Yasaka Kanako (EW)'
   Move:
   - 'Divine Wind'
   - 'Onbashira Pillar'
@@ -90,7 +90,7 @@ KanakoEW:
 # ---- Act 2 Boss ----
 
 SuwakoEW:
-  Title: 'Moriya Suwako'
+  Title: 'Moriya Suwako (EW)'
   Move:
   - 'Frog Strike'
   - 'Earthquake'
@@ -100,20 +100,20 @@ SuwakoEW:
 # ---- Act 3 Normal Enemies ----
 
 HiganbanaWraithEW:
-  Title: 'Higanbana Wraith'
+  Title: 'Higanbana Wraith (EW)'
   Move:
   - 'Soul Drain'
   - 'Spirit Veil'
 
 YoumuPhantomEW:
-  Title: 'Youmu Phantom'
+  Title: 'Youmu Phantom (EW)'
   Move:
   - 'Human Blade Strike'
   - 'Half-Phantom Slash'
   - 'Phantom Guard'
 
 NetherMessengerEW:
-  Title: 'Nether Messenger'
+  Title: 'Nether Messenger (EW)'
   Move:
   - 'Verdict Strike'
   - 'Nether Shield'
@@ -121,14 +121,14 @@ NetherMessengerEW:
 # ---- Act 3 Elite Enemies ----
 
 EikiEW:
-  Title: 'Shiki Eiki Yamaxanadu'
+  Title: 'Shiki Eiki Yamaxanadu (EW)'
   Move:
   - 'Judgment'
   - 'Verdict'
   - 'Righteous Barrier'
 
 YuyukoEliteEW:
-  Title: 'Saigyouji Yuyuko'
+  Title: 'Saigyouji Yuyuko (EW)'
   Move:
   - 'Ghost Butterfly'
   - 'Death Realm'
@@ -137,7 +137,7 @@ YuyukoEliteEW:
 # ---- Act 3 Boss ----
 
 YuyukoEW:
-  Title: 'Saigyouji Yuyuko'
+  Title: 'Saigyouji Yuyuko (EW)'
   Move:
   - 'Ghost Butterfly Dance'
   - 'Spring Death in Full Bloom'
