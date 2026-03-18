@@ -1,14 +1,124 @@
-SampleCharacterExhibitA:
-  Name: First exhibit
-  Description: |-
-    Adds {Mana} to the mana base. Cards unique to |SampleCharacter| are added to the card pool.
-    At the start of the first turn each combat, add a |Rainbow| to the hand.
-  FlavorText: Flavor text for the first Exhibit.
+# ---- Act 1 Elite Exhibits ----
 
-SampleCharacterExhibitB:
-  Name: Second Exhibit
+FairyIceCrystalExhibit:
+  Name: Fairy Ice Crystal
   Description: |-
-    Adds {Mana} to the mana base. Cards unique to |SampleCharacter| are added to the card pool.
-    At the end of {PlayerName}'s turn, increase this exhibit's counter by {Value1}.
-    Resets at the end of combat.
-  FlavorText: Some lore accurate description about how this item was used
+    At the start of battle, gain {Value1} Block.
+  FlavorText: A shard of ice crystallized by Daiyousei's power.
+
+IceSealCoreExhibit:
+  Name: Ice Seal Core
+  Description: |-
+    At the start of your turn, if there is a |Misfortune| card in your hand, gain {Value1} Block.
+  FlavorText: The seal that binds the Frost Shard curse — turned into a shield.
+
+ShikigamiBellExhibit:
+  Name: Shikigami Bell
+  Description: |-
+    At the end of your turn, if you took {Value1}+ HP damage this turn, gain 1 |Firepower|. (Max {Value2} times per battle.)
+  FlavorText: Chen's bell — pain becomes power.
+
+# ---- Act 2 Elite Exhibits ----
+
+BunbunExtraEditionExhibit:
+  Name: Bunbun Extra Edition
+  Description: |-
+    At the start of battle, draw {Value1} extra card(s).
+  FlavorText: Aya's exclusive scoop — always one step ahead.
+
+TenguFanExhibit:
+  Name: Tengu Fan
+  Description: |-
+    At the start of your turn, gain 1 |Colorless| mana.
+  FlavorText: A gust of wind to fuel the first move.
+
+PhantomBiwaSliverExhibit:
+  Name: Phantom Biwa Sliver
+  Description: |-
+    At the end of your turn, if you played {Value1}+ cards this turn, heal {Value2} HP.
+  FlavorText: A lacquer chip from Benben's biwa — music that heals.
+
+TsukumogamiNoteExhibit:
+  Name: Tsukumogami Music Note
+  Description: |-
+    At the start of battle, gain {Value1} |Firepower|.
+  FlavorText: Yatsuhashi's opening note — the fighting spirit it awakens.
+
+# ---- Act 3 Elite Exhibits ----
+
+WhiteTowerScabbardExhibit:
+  Name: White Tower Scabbard Shard
+  Description: |-
+    At the start of battle, gain {Value1} |Graze|.
+  FlavorText: Youmu's phantom footwork lingers in this fragment.
+
+PhantomSwordAuraExhibit:
+  Name: Phantom Sword Aura
+  Description: |-
+    When you play your 3rd or more Attack card in a turn, deal {Value1} piercing damage to the main target.
+  FlavorText: The surge of Youmu's Present World Slash.
+
+DeathScytheFragmentExhibit:
+  Name: Death Scythe Fragment
+  Description: |-
+    At the start of battle, gain 1 |Firepower|. Each time an enemy dies, gain 1 more |Firepower|. (Total max {Value1}.)
+  FlavorText: Komachi's scythe fragment — grows stronger with each fallen foe.
+
+HiganFerryCoinExhibit:
+  Name: Higan Ferry Coin
+  Description: |-
+    After winning a battle, heal {Value1}% of your max HP.
+  FlavorText: The ferry toll — returning from the edge of death brings renewal.
+
+# ---- Act 1 Boss Exhibits (Shining) ----
+
+EternalWinterIceSoulExhibit:
+  Name: Eternal Winter Ice Soul
+  Description: |-
+    Adds {Mana} to the mana base.
+    Max HP +{Value1}.
+    At the start of battle, gain {Value2} Block.
+  FlavorText: Letty's frozen soul — unyielding as eternal winter.
+
+WinterQueenCrownExhibit:
+  Name: Winter Queen's Crown
+  Description: |-
+    Adds {Mana} to the mana base.
+    At the start of battle, gain {Value1} |Firepower| and draw {Value2} extra card(s).
+  FlavorText: Only those who endure the eternal winter may wear this crown.
+
+# ---- Act 2 Boss Exhibits (Shining) ----
+
+MoriyaAmuletExhibit:
+  Name: Moriya Sacred Amulet
+  Description: |-
+    Adds {Mana} to the mana base.
+    Max HP +{Value1}.
+    At the start of your turn, if you have {Value2} or fewer cards in hand, gain {Value3} Block.
+  FlavorText: The divine protection of Moriya Shrine — still and calm brings strength.
+
+OnbashiraFragmentExhibit:
+  Name: Onbashira Fragment
+  Description: |-
+    Adds {Mana} to the mana base.
+    At the start of battle, gain {Value1} |Firepower|.
+    Every {Value2} cards played, gain 1 additional |Firepower|. (Max {Value3} bonus stacks.)
+  FlavorText: A pillar of divine power — grows stronger with each offering.
+
+# ---- Act 3 Boss Exhibits (Shining) ----
+
+GhostPrincessHairpinExhibit:
+  Name: Ghost Princess Hairpin
+  Description: |-
+    Adds {Mana} to the mana base.
+    Max HP +{Value1}.
+    At the start of battle, gain {Value2} |Firepower|.
+  FlavorText: Yuyuko's butterfly pin — death becomes the will to fight.
+
+ReincarnationButterflyWingExhibit:
+  Name: Resurrection Butterfly Wing
+  Description: |-
+    Adds {Mana} to the mana base.
+    At the start of battle, gain {Value1} |Firepower|.
+    Whenever an enemy dies, heal {Value2} HP.
+  FlavorText: A wing of the Resurrection Butterfly — life drawn from the departed.

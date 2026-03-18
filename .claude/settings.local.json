@@ -79,7 +79,9 @@
       "Bash(cmd /c \"cd /d D:\\\\riderProject\\\\lbol-sample-adventure\\\\InspectDll && dotnet run\" 2>&1)",
       "Bash(cmd /c \"cd /d D:\\\\\\\\riderProject\\\\\\\\lbol-sample-adventure\\\\\\\\InspectDll && dotnet run 2>&1\" | cat)",
       "Bash(cmd /c \"dir \\\\\"D:\\\\\\\\Program FIles\\\\\\\\Steam\\\\\\\\steamapps\\\\\\\\common\\\\\\\\LBoL\\\\\\\\BepInEx\\\\\\\\plugins\\\\\\\\\" 2>&1 | head -20)",
-      "Bash(cmd /c \"dir \\\\\"D:\\\\\\\\Program FIles\\\\\\\\Steam\\\\\\\\steamapps\\\\\\\\common\\\\\\\\LBoL\\\\\\\\BepInEx\\\\\\\\plugins\\\\\"\" 2>&1)"
+      "Bash(cmd /c \"dir \\\\\"D:\\\\\\\\Program FIles\\\\\\\\Steam\\\\\\\\steamapps\\\\\\\\common\\\\\\\\LBoL\\\\\\\\BepInEx\\\\\\\\plugins\\\\\"\" 2>&1)",
+      "Bash(git ls-tree:*)",
+      "Bash(git log:*)"
     ]
   }
 }

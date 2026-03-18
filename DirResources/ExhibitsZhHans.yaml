@@ -1,0 +1,124 @@
+# ---- 第一幕精英展品 ----
+
+FairyIceCrystalExhibit:
+  Name: 妖精冰晶
+  Description: |-
+    战斗开始时，获得 {Value1} 点格挡。
+  FlavorText: 大妖精凝结的冰晶碎片。
+
+IceSealCoreExhibit:
+  Name: 寒冰封印核
+  Description: |-
+    每回合开始时，若手牌中存在|厄运|牌，获得 {Value1} 点格挡。
+  FlavorText: 封印「寒冰晶」诅咒的核心——以毒攻毒，化为护盾。
+
+ShikigamiBellExhibit:
+  Name: 式神尾铃
+  Description: |-
+    回合结束时，若本回合受到 {Value1} 点及以上伤害，获得 1 层|火力|。（每场战斗最多触发 {Value2} 次。）
+  FlavorText: 橙的颈铃——痛觉化为力量。
+
+# ---- 第二幕精英展品 ----
+
+BunbunExtraEditionExhibit:
+  Name: 文文☆号外
+  Description: |-
+    战斗开始时，额外多抽 {Value1} 张牌。
+  FlavorText: 文的独家报道——抢先一步，先手优势是天狗的本能。
+
+TenguFanExhibit:
+  Name: 天狗羽团扇
+  Description: |-
+    每回合开始时，获得 1 点|无色|法力。
+  FlavorText: 一阵疾风为最初的行动提供助力。
+
+PhantomBiwaSliverExhibit:
+  Name: 幻奏琵琶片
+  Description: |-
+    回合结束时，若本回合打出了 {Value1} 张及以上的牌，回复 {Value2} 点 HP。
+  FlavorText: 弁弁琵琶上剥落的漆片——旋律余韵悄然治愈。
+
+TsukumogamiNoteExhibit:
+  Name: 付喪神音符
+  Description: |-
+    战斗开始时，获得 {Value1} 层|火力|。
+  FlavorText: 八橋琴弦奏出的第一个音——临战时心头升起的斗志。
+
+# ---- 第三幕精英展品 ----
+
+WhiteTowerScabbardExhibit:
+  Name: 白楼剑鞘碎片
+  Description: |-
+    战斗开始时，获得 {Value1} 层|闪避|。
+  FlavorText: 妖梦幽幻的步法余韵还留存其中。
+
+PhantomSwordAuraExhibit:
+  Name: 幽幻剑气
+  Description: |-
+    当你打出的攻击牌为本回合第 3 张及以上时，追加对主要目标 {Value1} 点穿透伤害。
+  FlavorText: 妖梦「现世斩」的剑气余威。
+
+DeathScytheFragmentExhibit:
+  Name: 死神的大镰残片
+  Description: |-
+    战斗开始时获得 1 层|火力|；每当一个敌人死亡，额外获得 1 层|火力|。（合计最多 {Value1} 层。）
+  FlavorText: 小町大镰上崩落的铁片——随着敌人倒下而愈发散发死神气息。
+
+HiganFerryCoinExhibit:
+  Name: 三途渡费铜钱
+  Description: |-
+    每场战斗胜利后，回复最大 HP 的 {Value1}%。
+  FlavorText: 小町向亡灵收取的渡河费——从生死边缘归来，会带来一丝恢复。
+
+# ---- 第一幕 Boss 展品（光耀）----
+
+EternalWinterIceSoulExhibit:
+  Name: 永冬冰魄石
+  Description: |-
+    将 {Mana} 加入法力基础。
+    最大 HP +{Value1}。
+    战斗开始时，获得 {Value2} 点格挡。
+  FlavorText: 蕾缇的冰封魂魄——永冬意志赋予持有者如铁的防御。
+
+WinterQueenCrownExhibit:
+  Name: 寒冬女王冠冕
+  Description: |-
+    将 {Mana} 加入法力基础。
+    战斗开始时，获得 {Value1} 层|火力|，并额外多抽 {Value2} 张牌。
+  FlavorText: 只有熬过永冬的人才能戴上的冰冠。
+
+# ---- 第二幕 Boss 展品（光耀）----
+
+MoriyaAmuletExhibit:
+  Name: 守矢神符
+  Description: |-
+    将 {Mana} 加入法力基础。
+    最大 HP +{Value1}。
+    每回合开始时，若手牌数 ≤ {Value2}，获得 {Value3} 点格挡。
+  FlavorText: 守矢神社的神力——手持有限而心静如山，神明会赐下庇护。
+
+OnbashiraFragmentExhibit:
+  Name: 御柱碎片
+  Description: |-
+    将 {Mana} 加入法力基础。
+    战斗开始时，获得 {Value1} 层|火力|。
+    每打出 {Value2} 张牌，额外获得 1 层|火力|。（额外上限 {Value3} 层。）
+  FlavorText: 贯穿大地的御柱碎块——以出牌为祭品，转化为神力。
+
+# ---- 第三幕 Boss 展品（光耀）----
+
+GhostPrincessHairpinExhibit:
+  Name: 幽灵公主蝴蝶发簪
+  Description: |-
+    将 {Mana} 加入法力基础。
+    最大 HP +{Value1}。
+    战斗开始时，获得 {Value2} 层|火力|。
+  FlavorText: 幽幽子发间的蝴蝶簪——死亡的气息化为旺盛的生命意志。
+
+ReincarnationButterflyWingExhibit:
+  Name: 反魂蝶翅膀
+  Description: |-
+    将 {Mana} 加入法力基础。
+    战斗开始时，获得 {Value1} 层|火力|。
+    每当一个敌人死亡，回复 {Value2} 点 HP。
+  FlavorText: 幽幽子「反魂蝶」的翅膀碎片——从逝者身上汲取了生命的余温。
