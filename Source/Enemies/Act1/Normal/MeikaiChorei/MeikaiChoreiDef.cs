@@ -1,0 +1,38 @@
+using System.Collections.Generic;
+using LBoL.Base;
+using LBoL.ConfigData;
+using LBoLEntitySideloader;
+using EternalWinterMod.Enemies.Template;
+using EternalWinterMod.GunName;
+
+
+namespace EternalWinterMod.Enemies.Act1
+{
+    public sealed class MeikaiChoreiDef : SampleCharacterEnemyUnitTemplate
+    {
+        public override EnemyUnitConfig MakeConfig()
+        {
+            EnemyUnitConfig config = GetEnemyUnitDefaultConfig();
+            config.Type = EnemyType.Normal;
+
+            config.MaxHp = 52;
+            config.MaxHpHard = 57;
+            config.MaxHpLunatic = 62;
+
+            config.Damage1 = 9;
+            config.Damage1Hard = 10;
+            config.Damage1Lunatic = 11;
+
+            config.Defend = 7;
+            config.DefendHard = 8;
+            config.DefendLunatic = 9;
+
+            config.PowerLoot = new MinMax(35, 50);
+            config.BluePointLoot = new MinMax(0, 0);
+
+            config.Gun1 = new List<string> { GunNameID.GetGunFromId(800) };
+
+            return config;
+        }
+    }
+}

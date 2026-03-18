@@ -25,6 +25,13 @@
         <DebugType>full</DebugType>
     </PropertyGroup>
 
+    <!-- InspectDll 是独立工具项目，排除在主项目编译之外 -->
+    <ItemGroup>
+        <Compile Remove="InspectDll\**" />
+        <None Remove="InspectDll\**" />
+        <Content Remove="InspectDll\**" />
+    </ItemGroup>
+
     <ItemGroup>
         <PackageReference Include="BepInEx.Analyzers" Version="1.0.8">
             <PrivateAssets>all</PrivateAssets>

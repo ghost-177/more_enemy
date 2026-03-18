@@ -5,3 +5,48 @@ SampleCharacterMod:
   - 'Attack b'
   - 'Attack c'
   - 'Attack d'
+
+# ---- Act 1 Normal Enemies ----
+
+Yukidouji:
+  Title: 'Snow Fairy'
+  Move:
+  - 'Frost Bolt'
+  - 'Ice Barrier'
+
+MaiyoTsuki:
+  Title: 'Lost Moon Rabbit'
+  Move:
+  - 'Quick Strike'
+
+MeikaiChorei:
+  Title: 'Netherworld Butterfly Spirit'
+  Move:
+  - 'Spirit Touch'
+  - 'Ghostly Veil'
+
+# ---- Act 1 Elite Enemies ----
+
+Daiyousei:
+  Title: 'Great Fairy'
+  Move:
+  - 'Fairy Magic'
+  - 'Radiant Burst'
+  - 'Fairy Shield'
+
+Kaguya:
+  Title: 'Kaguya Houraisan'
+  Move:
+  - 'Hourai Elixir'
+  - 'Five Impossible Requests'
+  - 'Lunar Defense'
+
+# ---- Act 1 Boss ----
+
+Letty:
+  Title: 'Letty Whiterock'
+  Move:
+  - 'Ice Barrage'
+  - 'Perfect Freeze'
+  - 'Winter Veil'
+  - 'Frost Shower'
