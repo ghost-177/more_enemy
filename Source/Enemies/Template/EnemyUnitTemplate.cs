@@ -3,11 +3,11 @@ using LBoL.ConfigData;
 using LBoLEntitySideloader;
 using LBoLEntitySideloader.Entities;
 using LBoLEntitySideloader.Resource;
-using SampleCharacterMod.Config;
-using SampleCharacterMod.Localization;
+using EternalWinterMod.Config;
+using EternalWinterMod.Localization;
 
 
-namespace SampleCharacterMod.Enemies.Template
+namespace EternalWinterMod.Enemies.Template
 {
     public class SampleCharacterEnemyUnitTemplate : EnemyUnitTemplate
     {

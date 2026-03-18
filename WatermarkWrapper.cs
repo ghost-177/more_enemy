@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace SampleCharacterMod
+namespace EternalWinterMod
 {
     internal class WatermarkWrapper
     {

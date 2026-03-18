@@ -461,3 +461,85 @@ lbol_sample_character_mod-main/
     └── Adventure/
         └── SampleCustomEventDef.png    # 事件背景图（嵌入资源）
 ```
+
+---
+
+## 开发进度（截至 2026-03-18）
+
+### ✅ 已完成
+
+#### 基础设施
+- Mod ID：`touhou.lbol.eternal_winter`，Name：`EternalWinterEnemyMod`
+- 清理了原角色mod无关文件（Player/Exhibits/UltimateSkills/Loadouts/Model/Adventures/Patches）
+- BepinexPlugin IMGUI 事件UI代码已保留（后续可继续增加事件）
+- `Source/Cards/Template/CurseCardTemplate.cs` — 诅咒牌基类
+- `Source/StatusEffects/Template/StatusEffectTemplate.cs` — SE基类（EternalWinterSeTemplate）
+- `Source/Config/DefaultConfig.cs` — 含 `CardDefaultConfig()`（CardType.Misfortune，不可升级，不入池）
+
+#### 阶段一：7张诅咒牌（编译通过 ✅）
+| Index | 类名 | 效果 |
+|-------|------|------|
+| 30001 | FrostCrystal | 抽到时失去1点当前法力 |
+| 30002 | BrokenDevice | 抽到时随机弃1张牌，然后放逐自身 |
+| 30003 | DivinePunishment | 飘忽；打出时失去1点法力 |
+| 30004 | ExtraNewsReport | 抽到时受4穿透伤害，然后放逐自身 |
+| 30005 | NetherworldVerdict | 持有时每回合结束受2穿透伤害（via NetherworldVerdictSe）|
+| 30006 | HiganFlower | 抽到时受8穿透伤害，然后放逐自身 |
+| 30007 | NetherworldDecree | 持有时每出一张牌失去1点法力（via NetherworldDecreeSe）|
+
+- 本地化：`DirResources/CardsEn.yaml`、`DirResources/StatusEffectsEn.yaml` 已填写
+
+### ⏳ 待开发
+
+#### 阶段二：18只敌人（未开始）
+每幕：3小怪 + 2精英 + 1Boss，共18个敌人单位。
+
+**第一幕（冰封人里·雪雾森林）**
+- 小怪：雪童子、迷途月兔（×2出场）、冥界蝶灵
+- 精英：大妖精（Daiyousei）、蓬莱山辉夜
+- Boss：蕾蒂·霍瓦多（Letty Whiterock）
+
+**第二幕（妖怪之山·风雪乱序）**
+- 小怪：天狗斥候、河童机工、山灵缚仙
+- 精英：犬走椛、八坂神奈子
+- Boss：洩矢诹访子
+
+**第三幕（彼岸·幽冥之境）**
+- 小怪：彼岸亡灵、魂魄妖梦（精英前置）、幽冥使者
+- 精英：四季映姬、幽幽子（前置）
+- Boss：西行寺幽幽子
+
+#### 阶段三：Boss 专属 SE
+- 蕾蒂 Boss 专属「法力冻结」SE（ManaFreeze）：每回合随机锁定玩家N格法力
+
+#### 阶段四：地图注入
+- Harmony补丁将各幕敌人注入对应幕的 EnemyPool / ElitePool / BossPool
+
+#### 阶段五：本地化
+- `DirResources/EnemyUnitEn.yaml` 填写所有18只敌人
+
+---
+
+## 关键 API 勘误（从实际编译中发现，优先级高）
+
+> 以下与网络资料/旧文档不符，以此为准：
+
+| 错误用法 | 正确用法 |
+|----------|----------|
+| `ReactBattleEvent(...)` （SE内） | `ReactOwnerEvent(Owner.TurnEnded, handler)` |
+| `Owner.CardUsed` | `Battle.CardUsed`（在BattleController上）|
+| `TransferManaAction` / `TransferManaType` | 不存在；用 `LoseTurnManaAction(ManaGroup)` |
+| `DiscardCardAction(card)` | `DiscardAction(card)` |
+| `AttackTarget.Self` | 不存在；`DamageAction` 无此参数 |
+| `DamageAction(src, target, info, target)` 4参 | `DamageAction(src, target, DamageInfo.HpLose(n, false), "", GunType.Single)` 5参 |
+| `ApplyStatusEffectAction(type, unit, level, null, null, 0f)` 6参 | 8参：`(type, unit, level, null, null, null, 0f, false)` |
+| `RemoveStatusEffectAction(se, false, 1)` int | 第3参为float：`(se, false, 0f)` |
+| SE的 `OnAdded()` 无参 | `protected override void OnAdded(Unit unit)` |
+| SE的 `IsValid` | 不存在；用 `Owner != null` 代替 |
+| Card的 `OnDraw()` 返回void | 返回 `IEnumerable<BattleAction>`，用 `yield return` |
+| Card的 `OnDiscard()` / `OnExile()` | 不可override；用 `OnLeaveHand()` 代替 |
+
+### SE 事件订阅参数类型
+- `Owner.TurnEnded` → `GameEvent<UnitEventArgs>`，handler：`IEnumerable<BattleAction> Method(UnitEventArgs args)`
+- `Battle.CardUsed` → `GameEvent<CardUsingEventArgs>`，handler：`IEnumerable<BattleAction> Method(CardUsingEventArgs args)`，`args.Card` 可用
+- `GunType` 命名空间：`LBoL.Core.Cards`

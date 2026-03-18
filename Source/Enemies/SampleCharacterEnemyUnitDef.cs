@@ -2,21 +2,21 @@ using System.Collections.Generic;
 using LBoL.Base;
 using LBoL.ConfigData;
 using LBoLEntitySideloader;
-using SampleCharacterMod.Enemies.Template;
-using SampleCharacterMod.GunName;
+using EternalWinterMod.Enemies.Template;
+using EternalWinterMod.GunName;
 
 
-namespace SampleCharacterMod.Enemies
+namespace EternalWinterMod.Enemies
 {
     public sealed class SampleCharacterEnemyUnitDef : SampleCharacterEnemyUnitTemplate
     {
-        public override IdContainer GetId() => nameof(SampleCharacterMod);
+        public override IdContainer GetId() => nameof(EternalWinterMod);
 
         public override EnemyUnitConfig MakeConfig()
         {
             EnemyUnitConfig config = GetEnemyUnitDefaultConfig();
             //Whether the boss should be enabled.
-            config.IsPreludeOpponent = BepinexPlugin.enableAct1Boss.Value;
+            config.IsPreludeOpponent = false;
 
             //Color(s) of the exhibits the boss can drop (right-most exhibit).
             config.BaseManaColor = new List<ManaColor>() { ManaColor.White };

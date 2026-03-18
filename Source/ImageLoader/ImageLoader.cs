@@ -3,7 +3,7 @@ using LBoLEntitySideloader.Entities;
 using LBoLEntitySideloader.Resource;
 using UnityEngine;
 
-namespace SampleCharacterMod.ImageLoader
+namespace EternalWinterMod.ImageLoader
 {
     public sealed class SampleCharacterImageLoader
     {

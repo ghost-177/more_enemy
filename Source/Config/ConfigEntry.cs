@@ -1,4 +1,4 @@
-namespace SampleCharacterMod.Config
+namespace EternalWinterMod.Config
 {
     public struct CustomConfigEntry<T>
     {

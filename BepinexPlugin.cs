@@ -1,46 +1,25 @@
 using BepInEx;
-using BepInEx.Configuration;
 using HarmonyLib;
-using LBoL.Base;
-using LBoL.EntityLib.EnemyUnits.Character;
 using LBoLEntitySideloader;
 using LBoLEntitySideloader.Entities;
 using LBoLEntitySideloader.Resource;
 using LBoL.Presentation;
-using SampleCharacterMod.Adventures;
-using SampleCharacterMod.Cards.Template;
-using SampleCharacterMod.Config;
-using System;
-using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
-using UnityEngine.UI;
 
 
-namespace SampleCharacterMod
+namespace EternalWinterMod
 {
-    [BepInPlugin(SampleCharacterMod.PInfo.GUID, SampleCharacterMod.PInfo.Name, SampleCharacterMod.PInfo.version)]
+    [BepInPlugin(PInfo.GUID, PInfo.Name, PInfo.version)]
     [BepInDependency(LBoLEntitySideloader.PluginInfo.GUID, BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency(AddWatermark.API.GUID, BepInDependency.DependencyFlags.SoftDependency)]
     [BepInProcess("LBoL.exe")]
     public class BepinexPlugin : BaseUnityPlugin
     {
-        public static string modUniqueID = "SampleCharacterMod";
-        public static string playerName = "SampleCharacter";
-        public static bool useInGameModel = true;
-        public static string modelName = nameof(Youmu);
-        public static bool modelIsFlipped = true;
-        public static List<ManaColor> offColors = new List<ManaColor>() { ManaColor.Colorless };
+        // 永冬异变 EnemyMod 唯一标识，用作 Owner 字段
+        public static string modUniqueID = "EternalWinterMod";
 
-        public static ConfigEntry<bool> enableAct1Boss;
-
-        public static CustomConfigEntry<bool> enableAct1BossEntry = new CustomConfigEntry<bool>(
-            value: false,
-            section: "EnableAct1Boss",
-            key: "EnableAct1Boss",
-            description: "Toggle the Act 1 boss. Default: Off");
-
-        private static readonly Harmony harmony = SampleCharacterMod.PInfo.harmony;
+        private static readonly Harmony harmony = PInfo.harmony;
 
         internal static BepInEx.Logging.ManualLogSource log;
 
@@ -48,27 +27,21 @@ namespace SampleCharacterMod
 
         internal static IResourceSource embeddedSource = new EmbeddedSource(Assembly.GetExecutingAssembly());
 
-        internal static DirectorySource directorySource = new DirectorySource(SampleCharacterMod.PInfo.GUID, "");
+        internal static DirectorySource directorySource = new DirectorySource(PInfo.GUID, "");
 
 
         private void Awake()
         {
             log = Logger;
-            enableAct1Boss = Config.Bind(enableAct1BossEntry.Section, enableAct1BossEntry.Key, enableAct1BossEntry.Value, enableAct1BossEntry.Description);
 
             DontDestroyOnLoad(gameObject);
             gameObject.hideFlags = HideFlags.HideAndDontSave;
 
-            CardIndexGenerator.PromiseClearIndexSet();
             EntityManager.RegisterSelf();
-
             harmony.PatchAll();
 
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey(AddWatermark.API.GUID))
                 WatermarkWrapper.ActivateWatermark();
-
-            Func<Sprite> getSprite = () => ResourceLoader.LoadSprite("BossIcon.png", directorySource);
-            EnemyUnitTemplate.AddBossNodeIcon(nameof(SampleCharacterMod.Enemies.SampleCharacterMod), getSprite);
         }
 
         // -----------------------------------------------------------------
@@ -122,7 +95,7 @@ namespace SampleCharacterMod
             EnsureUITextures();
 
             float sw = Screen.width;
-            float sh = Screen.height; 
+            float sh = Screen.height;
             float leftW = sw * 0.5f;
 
             // ---- 右半屏：背景图（StretchToFill 拉伸填满指定区域） ----
@@ -196,12 +169,12 @@ namespace SampleCharacterMod
         {
             if (Input.GetKeyDown(KeyCode.F6))
             {
-                var master = UnityEngine.Object.FindObjectOfType<LBoL.Presentation.GameMaster>();
+                var master = UnityEngine.Object.FindObjectOfType<GameMaster>();
                 var gameRun = master?.CurrentGameRun;
                 if (gameRun != null)
-                    SampleAdventureDebugHelper.ForceNextAdventure(gameRun);
+                    log.LogInfo("[EternalWinter] F6 pressed. GameRun active.");
                 else
-                    log.LogWarning("[SampleCustomEvent] F6 按下但当前没有进行中的游戏。");
+                    log.LogWarning("[EternalWinter] F6 pressed but no active GameRun.");
             }
         }
 

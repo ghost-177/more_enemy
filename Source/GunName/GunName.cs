@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LBoL.ConfigData;
 
-namespace SampleCharacterMod.GunName
+namespace EternalWinterMod.GunName
 {
     public static class GunNameID
     {

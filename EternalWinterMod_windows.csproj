@@ -12,7 +12,7 @@
         <!-- Change this path !!!-->
         <GameFolder>D:\Program FIles\Steam\steamapps\common\LBoL</GameFolder>
         <BepInExFolder>$(GameFolder)\BepInEx</BepInExFolder>
-        <RootNamespace>$(MSBuildProjectName.Replace(" ", "_").Replace("-", ""))</RootNamespace>
+        <RootNamespace>SampleCharacterMod_windows</RootNamespace>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <DocumentationFile></DocumentationFile>
     </PropertyGroup>

@@ -1,10 +1,10 @@
 using LBoL.ConfigData;
 using LBoLEntitySideloader;
 using LBoLEntitySideloader.Entities;
-using SampleCharacterMod.Config;
+using EternalWinterMod.Config;
 
 
-namespace SampleCharacterMod.Enemies.Template
+namespace EternalWinterMod.Enemies.Template
 {
     public abstract class SampleCharacterEnemyGroupTemplate : EnemyGroupTemplate
     {

@@ -5,10 +5,10 @@ using LBoL.Core.Units;
 using LBoLEntitySideloader.Attributes;
 
 
-namespace SampleCharacterMod.Enemies
+namespace EternalWinterMod.Enemies
 {
     [EntityLogic(typeof(SampleCharacterEnemyUnitDef))]
-    public sealed class SampleCharacterMod : EnemyUnit
+    public sealed class EternalWinterMod : EnemyUnit
     {
         //Internal list of the boss moves
         private enum MoveType

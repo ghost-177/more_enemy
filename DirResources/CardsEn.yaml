@@ -1,165 +1,37 @@
-SampleCharacterAttackW:
-  Name: Sample Attack (White)
-  Description: Deal {Damage} damage.
-
-SampleCharacterAttackR:
-  Name: Sample Attack (Red)
-  Description: Deal {Damage} damage.
-
-SampleCharacterBlockB:
-  Name: Sample Block (Black)
-  Description: Gain {Block} |Block|.
-
-SampleCharacterBlockU:
-  Name: Sample Block (Blue)
-  Description: Gain {Block} |Block|.
-
-SampleCharacterBlockAndBarrier:
-  Name: Block and Barrier
+FrostCrystal:
+  Name: Frost Crystal
   Description: |-
-    Gain {Block} |Block|.
-    Gain {Shield} |Barrier|.
+    |While in hand|: When drawn, lose 1 mana.
 
-SampleCharacterToken:
-  Name: Token card
+BrokenDevice:
+  Name: Broken Device
   Description: |-
-    Deal {Damage} damage. 
-    Draw {Value1} card{Value1:plural one='' other='s'}.
+    When drawn, randomly discard 1 card from hand, then |Exile| this card.
 
-SampleCharacterBonusOnUpgrade:
-  Name: Bonus on Upgrade
-  Description: Deal {Damage} damage.
-  UpgradedDescription: |-
-    Deal {Damage} damage.
-    Draw {Value1} card{Value1:plural one='' other='s'}.
-
-SampleCharacterMultiAttack:
-  Name: Multi Attack
-  Description: Deal {Damage} damage {Value1} times.
-
-SampleCharacterAccurateAttack:
-  Name: Accurate Attack
-  Description: Deal {Damage} damage.
-
-SampleCharacterAoeAttack:
-  Name: Aoe Attack
+DivinePunishment:
+  Name: Divine Punishment
   Description: |-
-    Deal {Damage} damage to each enemy.
-    Apply {Value1} |Lock On| to each enemy.
+    When played, lose 1 mana.
+    |Ethereal|.
 
-SampleCharacterCustomAction:
-  Name: Custom Action
+ExtraNewsReport:
+  Name: Extra News
   Description: |-
-    Choose up to {Value2} |Attack| card{Value2:plural one='' other='s'} in the hand. |Enhance| them by {Value1}.
+    When drawn, lose {Value1} HP (piercing), then |Exile| this card.
 
-SampleCharacterCustomReactor:
-  Name: Custom Reactor
+NetherworldVerdict:
+  Name: Netherworld Verdict
   Description: |-
-    Draw {Value1} card{Value1:plural one='' other='s'}.
-    Whenever the player |Enhances|, {SelfName} draw {Value2} additional card{Value2:plural one='' other='s'} this combat.
+    |While in hand|: At end of your turn, lose 2 HP (piercing).
+    Discard or exile this card to end the effect.
 
-SampleCharacterHeal:
-  Name: Heal 
+HiganFlower:
+  Name: Higan Flower
   Description: |-
-    Gain {Value1} life.
-    Target enemy gains {Value2} life.
+    When drawn, take {Value1} piercing damage, then |Exile| this card.
 
-SampleCharacterLoseHp:
-  Name: Lose Hp. 
+NetherworldDecree:
+  Name: Netherworld Decree
   Description: |-
-    Lose {Value1} life.
-    Target enemy loses {Value2} life.
-    
-SampleCharacterDebuff:
-  Name: Debuff 
-  Description: |-
-    Apply {Value1} |Weak|.
-    Apply {Value1} |Vulnerable|.
-    Apply {Value2} |Firepower Down|.
-
-SampleCharacterDraw:
-  Name: Draw card 
-  Description: |-
-    Draw {Value1} card{Value1:plural one='' other='s'}.
-    At the start of the next turn, Draw {Value2} card{Value2:plural one='' other='s'}.
-    At the start of each turn, Draw {Value3} card{Value3:plural one='' other='s'}.
-
-SampleCharacterConditional:
-  Name: Conditional effect 
-  Description: |-
-    Gain {Value1} |Reflection|.
-    If an enemy intends to attack, gain {Value2} |Static Charge| until the Player's next turn. 
-
-SampleCharacterCardGeneration:
-  Name: Card Generation 
-  Description: |-
-    Add a |Token card| to the hand, draw pile and discard pile.
-  UpgradedDescription:
-    Add {Value1} |Token cards| to the hand, draw pile and discard pile.
-
-SampleCharacterDynamicCost:
-  Name: Dynamic Cost 
-  Description: |-
-    Deal {Damage} damage.
-    Cost {Mana} less for each card in hand.
-
-SampleCharacterUnplayable:
-  Name: Unplayable card 
-  Description: |-
-    |While in hand|: At the end of each {PlayerName}'s turn, gain {Value1} |Barrier|.
-
-SampleCharacterMultipleKeywords:
-  Name: Multiple Keywords
-  Description: |-
-    Gain {Value1} |Temporary Firepower|.
-    Apply {Value1} |Temporary Firepower Down|.
-
-SampleCharacterGainMana:
-  Name: Gain Mana Card
-  Description: Gain {Mana}.
-
-SampleCharacterBasicAbility:
-  Name: Basic Ability
-  Description: |-
-    Gain {Value1} |Firepower|.
-    Gain {Value2} |Spirit|.
-
-SampleCharacterCustomAbility:
-  Name: Custom Ability
-  Description: |-
-    At the start of {PlayerName}'s turn, gain {Value1} |Spirit|.
-
-SampleCharacterGraze:
-  Name: Graze Card
-  Description: Gain {Value1} |Graze|.
-
-SampleCharacterHybrid:
-  Name: Hybrid-cost Card
-  Description: At the start of the next turn, Gain {Mana}.
-
-SampleCharacterXCost:
-  Name: X-Cost card
-  Description: |-
-    Deal {Damage} damage.
-    |For each {Mana} spent|: Deal {Value1} additional damage.
-    |For each {BlueMana} spent|: Gain {Value2} life.
-
-SampleCharacterDiscover:
-  Name: Discover
-  Description: |-
-    Choose {Value2} of {Value1} random card{Value2:plural one='' other='s'} to add to the hand. It temporarily costs {Mana} and has |Exile| and |Ethereal|.
-
-SampleCharacterExtraTurn:
-  Name: Extra Turn
-  Description: |-
-    End {PlayerName}'s turn. Then, take an extra turn. 
-    |Time Limit| {Mana}
-
-SampleCharacterTeammate:
-  Name: Sample Teammate
-  Description: "{Indent}Draw {Value1} card{Value1:plural one='' other='s'}.\n{PassiveCostIcon}Draw {Value1} card."
-  UpgradedDescription: "{Indent}Draw {Value1} card{Value1:plural one='' other='s'}.\n{PassiveCostIcon}Draw {Value1} card."
-  ExtraDescription1: "{ActiveCostIcon}Draw {Value1} card{Value1:plural one='' other='s'}."
-  UpgradedExtraDescription1: "{ActiveCostIcon}Draw {Value1} card{Value1:plural one='' other='s'}."
-  ExtraDescription2: "{UltimateCostIcon}Draw {Value2} card{Value2:plural one='' other='s'}."
-  UpgradedExtraDescription2: "{UltimateCostIcon}Draw {Value2} card{Value2:plural one='' other='s'}."
+    |While in hand|: Each card you play costs 1 extra mana.
+    Discard or exile this card to end the effect.

@@ -1,7 +1,7 @@
-SampleCharacterTurnGainSpiritSe:
-  Name: Turn Gain Spirit
-  Description: At the start of {PlayerName}'s turn, gain {Level} |Spirit|.
+NetherworldVerdictSe:
+  Name: Netherworld Verdict
+  Description: At end of turn, lose {Level}x2 HP (piercing). Removed when the source card leaves hand.
 
-SampleCharacterKeywordEnhanceSe:
-  Name: Enhance
-  Brief: Target card deal additional damage.
+NetherworldDecreeSe:
+  Name: Netherworld Decree
+  Description: Each card played costs {Level} extra mana. Removed when the source card leaves hand.
