@@ -1,0 +1,7 @@
+NetherworldVerdictSe:
+  Name: 冥界裁决
+  Description: 回合结束时受到{Level}×2点穿透伤害。来源牌离开手牌时移除。
+
+NetherworldDecreeSe:
+  Name: 冥界令
+  Description: 每打出一张牌额外消耗{Level}点法力。来源牌离开手牌时移除。

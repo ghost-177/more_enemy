@@ -1,0 +1,37 @@
+FrostCrystal:
+  Name: 冰晶
+  Description: |-
+    |持有时|：被抽到时，失去1点法力。
+
+BrokenDevice:
+  Name: 破损装置
+  Description: |-
+    被抽到时，随机弃掉手牌中的1张牌，然后|放逐|此牌。
+
+DivinePunishment:
+  Name: 天罚
+  Description: |-
+    打出时，失去1点法力。
+    |飘忽|。
+
+ExtraNewsReport:
+  Name: 号外
+  Description: |-
+    被抽到时，受到{Value1}点穿透伤害，然后|放逐|此牌。
+
+NetherworldVerdict:
+  Name: 冥界裁决
+  Description: |-
+    |持有时|：每回合结束时，受到2点穿透伤害。
+    弃掉或放逐此牌可解除效果。
+
+HiganFlower:
+  Name: 彼岸花
+  Description: |-
+    被抽到时，受到{Value1}点穿透伤害，然后|放逐|此牌。
+
+NetherworldDecree:
+  Name: 冥界令
+  Description: |-
+    |持有时|：每打出一张牌额外消耗1点法力。
+    弃掉或放逐此牌可解除效果。

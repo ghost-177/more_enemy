@@ -1,0 +1,145 @@
+SampleCharacterMod:
+  Title: '测试'
+  Move:
+  - '攻击 a'
+  - '攻击 b'
+  - '攻击 c'
+  - '攻击 d'
+
+# ---- 第一幕 普通敌人 ----
+
+Yukidouji:
+  Title: '雪童子'
+  Move:
+  - '冰霜弹'
+  - '冰盾'
+
+MaiyoTsuki:
+  Title: '迷途月兔'
+  Move:
+  - '快速一击'
+
+MeikaiChorei:
+  Title: '冥界蝶灵'
+  Move:
+  - '灵体触碰'
+  - '幽灵薄纱'
+
+# ---- 第一幕 精英 ----
+
+Daiyousei:
+  Title: '大妖精'
+  Move:
+  - '妖精魔法'
+  - '光辉爆发'
+  - '妖精盾'
+
+Kaguya:
+  Title: '蓬莱山辉夜'
+  Move:
+  - '蓬莱仙药'
+  - '五难之请'
+  - '月之防壁'
+
+# ---- 第一幕 Boss ----
+
+Letty:
+  Title: '蕾蒂·霍瓦多'
+  Move:
+  - '冰弹连射'
+  - '极寒封冻'
+  - '寒冬薄纱'
+  - '冰晶淋浴'
+
+# ---- 第二幕 普通敌人 ----
+
+TenguScout:
+  Title: '天狗斥候'
+  Move:
+  - '风刃斩'
+  - '戒备姿态'
+
+KappaMechanic:
+  Title: '河童机工'
+  Move:
+  - '弹射装置'
+  - '动力炮击'
+
+MountainFairy:
+  Title: '山灵缚仙'
+  Move:
+  - '束缚咒'
+  - '灵气护盾'
+
+# ---- 第二幕 精英 ----
+
+Momiji:
+  Title: '犬走椛'
+  Move:
+  - '刀击'
+  - '速斩'
+  - '盾守'
+
+Kanako:
+  Title: '八坂神奈子'
+  Move:
+  - '神风'
+  - '御柱'
+  - '神圣防壁'
+
+# ---- 第二幕 Boss ----
+
+Suwako:
+  Title: '洩矢诹访子'
+  Move:
+  - '蛙击'
+  - '大地震'
+  - '大地防壁'
+  - '铁环连击'
+
+# ---- 第三幕 普通敌人 ----
+
+HiganbanaWraith:
+  Title: '彼岸亡灵'
+  Move:
+  - '夺魂'
+  - '幽灵薄纱'
+
+YoumuPhantom:
+  Title: '魂魄妖梦'
+  Move:
+  - '人刀击'
+  - '幽灵半身斩'
+  - '幽幻防御'
+
+NetherMessenger:
+  Title: '幽冥使者'
+  Move:
+  - '裁决一击'
+  - '冥界护盾'
+
+# ---- 第三幕 精英 ----
+
+Eiki:
+  Title: '四季映姬·亚马沙纳度'
+  Move:
+  - '审判'
+  - '裁决'
+  - '公正防壁'
+
+YuyukoElite:
+  Title: '西行寺幽幽子'
+  Move:
+  - '幽灵蝶'
+  - '死亡领域'
+  - '幽灵薄纱'
+
+# ---- 第三幕 Boss ----
+
+Yuyuko:
+  Title: '西行寺幽幽子'
+  Move:
+  - '幽灵蝶舞'
+  - '春死满开'
+  - '幽灵防壁'
+  - '幽冥结界'
