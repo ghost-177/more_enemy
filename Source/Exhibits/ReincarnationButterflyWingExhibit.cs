@@ -8,6 +8,7 @@ using LBoL.Core.StatusEffects;
 using LBoL.Core.Units;
 using LBoLEntitySideloader.Attributes;
 using EternalWinterMod.Exhibits;
+using LBoL.EntityLib.Exhibits;
 
 
 namespace EternalWinterMod.Exhibits
@@ -27,7 +28,7 @@ namespace EternalWinterMod.Exhibits
     }
 
     [EntityLogic(typeof(ReincarnationButterflyWingExhibitDef))]
-    public sealed class ReincarnationButterflyWingExhibit : Exhibit
+    public sealed class ReincarnationButterflyWingExhibit : ShiningExhibit
     {
         protected override void OnEnterBattle()
         {

@@ -8,6 +8,7 @@ using LBoL.Core.StatusEffects;
 using LBoL.Core.Units;
 using LBoLEntitySideloader.Attributes;
 using EternalWinterMod.Exhibits;
+using LBoL.EntityLib.Exhibits;
 
 
 namespace EternalWinterMod.Exhibits
@@ -30,7 +31,7 @@ namespace EternalWinterMod.Exhibits
     }
 
     [EntityLogic(typeof(OnbashiraFragmentExhibitDef))]
-    public sealed class OnbashiraFragmentExhibit : Exhibit
+    public sealed class OnbashiraFragmentExhibit : ShiningExhibit
     {
         private int _cardsPlayedTotal;
         private int _bonusFirepowerGained;

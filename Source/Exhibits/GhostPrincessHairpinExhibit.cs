@@ -8,6 +8,7 @@ using LBoL.Core.StatusEffects;
 using LBoL.Core.Units;
 using LBoLEntitySideloader.Attributes;
 using EternalWinterMod.Exhibits;
+using LBoL.EntityLib.Exhibits;
 
 
 namespace EternalWinterMod.Exhibits
@@ -27,7 +28,7 @@ namespace EternalWinterMod.Exhibits
     }
 
     [EntityLogic(typeof(GhostPrincessHairpinExhibitDef))]
-    public sealed class GhostPrincessHairpinExhibit : Exhibit
+    public sealed class GhostPrincessHairpinExhibit : ShiningExhibit
     {
         protected override void OnAdded(PlayerUnit player)
         {

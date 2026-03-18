@@ -7,6 +7,7 @@ using LBoL.Core.Battle.BattleActions;
 using LBoL.Core.Units;
 using LBoLEntitySideloader.Attributes;
 using EternalWinterMod.Exhibits;
+using LBoL.EntityLib.Exhibits;
 
 
 namespace EternalWinterMod.Exhibits
@@ -27,7 +28,7 @@ namespace EternalWinterMod.Exhibits
     }
 
     [EntityLogic(typeof(MoriyaAmuletExhibitDef))]
-    public sealed class MoriyaAmuletExhibit : Exhibit
+    public sealed class MoriyaAmuletExhibit : ShiningExhibit
     {
         protected override void OnAdded(PlayerUnit player)
         {

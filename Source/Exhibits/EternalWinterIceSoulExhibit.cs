@@ -7,6 +7,7 @@ using LBoL.Core.Battle.BattleActions;
 using LBoL.Core.Units;
 using LBoLEntitySideloader.Attributes;
 using EternalWinterMod.Exhibits;
+using LBoL.EntityLib.Exhibits;
 
 
 namespace EternalWinterMod.Exhibits
@@ -26,7 +27,7 @@ namespace EternalWinterMod.Exhibits
     }
 
     [EntityLogic(typeof(EternalWinterIceSoulExhibitDef))]
-    public sealed class EternalWinterIceSoulExhibit : Exhibit
+    public sealed class EternalWinterIceSoulExhibit : ShiningExhibit
     {
         protected override void OnAdded(PlayerUnit player)
         {
