@@ -50,3 +50,49 @@ Letty:
   - 'Perfect Freeze'
   - 'Winter Veil'
   - 'Frost Shower'
+
+# ---- Act 2 Normal Enemies ----
+
+TenguScout:
+  Title: 'Tengu Scout'
+  Move:
+  - 'Wind Slash'
+  - 'Guard Stance'
+
+KappaMechanic:
+  Title: 'Kappa Mechanic'
+  Move:
+  - 'Gadget Shot'
+  - 'Power Cannon'
+
+MountainFairy:
+  Title: 'Mountain Spirit Fairy'
+  Move:
+  - 'Binding Curse'
+  - 'Spirit Barrier'
+
+# ---- Act 2 Elite Enemies ----
+
+Momiji:
+  Title: 'Inubashiri Momiji'
+  Move:
+  - 'Blade Slash'
+  - 'Rapid Strike'
+  - 'Shield Stance'
+
+Kanako:
+  Title: 'Yasaka Kanako'
+  Move:
+  - 'Divine Wind'
+  - 'Onbashira Pillar'
+  - 'Sacred Shield'
+
+# ---- Act 2 Boss ----
+
+Suwako:
+  Title: 'Moriya Suwako'
+  Move:
+  - 'Frog Strike'
+  - 'Earthquake'
+  - 'Earth Barrier'
+  - 'Iron Rings'
