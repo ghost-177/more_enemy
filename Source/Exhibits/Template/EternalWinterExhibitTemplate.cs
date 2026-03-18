@@ -5,6 +5,7 @@ using LBoLEntitySideloader.Entities;
 using LBoLEntitySideloader.Resource;
 using EternalWinterMod.Config;
 using EternalWinterMod.Localization;
+using EternalWinterMod.ImageLoader;
 
 
 namespace EternalWinterMod.Exhibits
@@ -23,8 +24,7 @@ namespace EternalWinterMod.Exhibits
 
         public override ExhibitSprites LoadSprite()
         {
-            // 暂无专属图片，返回空精灵（游戏会显示空白图标）
-            return new ExhibitSprites();
+            return SampleCharacterImageLoader.LoadExhibitSprite(this);
         }
 
         public override ExhibitConfig MakeConfig()

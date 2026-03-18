@@ -81,7 +81,8 @@
       "Bash(cmd /c \"dir \\\\\"D:\\\\\\\\Program FIles\\\\\\\\Steam\\\\\\\\steamapps\\\\\\\\common\\\\\\\\LBoL\\\\\\\\BepInEx\\\\\\\\plugins\\\\\\\\\" 2>&1 | head -20)",
       "Bash(cmd /c \"dir \\\\\"D:\\\\\\\\Program FIles\\\\\\\\Steam\\\\\\\\steamapps\\\\\\\\common\\\\\\\\LBoL\\\\\\\\BepInEx\\\\\\\\plugins\\\\\"\" 2>&1)",
       "Bash(git ls-tree:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(grep:*)"
     ]
   }
 }

@@ -4,6 +4,7 @@ using LBoLEntitySideloader.Entities;
 using LBoLEntitySideloader.Resource;
 using EternalWinterMod.Config;
 using EternalWinterMod.Localization;
+using EternalWinterMod.ImageLoader;
 using UnityEngine;
 
 namespace EternalWinterMod.StatusEffects.Template
@@ -18,8 +19,7 @@ namespace EternalWinterMod.StatusEffects.Template
         public override LocalizationOption LoadLocalization()
             => SampleCharacterLocalization.StatusEffectsBatchLoc.AddEntity(this);
 
-        // 暂无图标，返回 null 使用默认占位
-        public override Sprite LoadSprite() => null;
+        public override Sprite LoadSprite() => SampleCharacterImageLoader.LoadStatusEffectLoader(this);
 
         protected StatusEffectConfig GetDefaultConfig() => SampleCharacterDefaultConfig.DefaultStatusEffectConfig();
     }
