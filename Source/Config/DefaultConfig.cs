@@ -37,7 +37,7 @@ namespace EternalWinterMod.Config
                 HideMesuem: true,
                 IsUpgradable: false,
                 Rarity: Rarity.Common,
-                Type: CardType.Misfortune,
+                Type: CardType.Status,
                 TargetType: null,
                 Colors: new List<ManaColor>() { ManaColor.Colorless },
                 IsXCost: false,
