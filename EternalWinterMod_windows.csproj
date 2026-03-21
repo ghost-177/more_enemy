@@ -610,7 +610,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Resources\Cards\" />
       <Folder Include="Resources\enemies\" />
       <Folder Include="Resources\Exhibits\" />
       <Folder Include="Resources\StatusEffects\" />

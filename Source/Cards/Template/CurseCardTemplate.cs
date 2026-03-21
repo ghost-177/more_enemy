@@ -3,6 +3,7 @@ using LBoLEntitySideloader;
 using LBoLEntitySideloader.Entities;
 using LBoLEntitySideloader.Resource;
 using EternalWinterMod.Config;
+using EternalWinterMod.ImageLoader;
 using EternalWinterMod.Localization;
 
 namespace EternalWinterMod.Cards.Template
@@ -18,8 +19,7 @@ namespace EternalWinterMod.Cards.Template
         public override LocalizationOption LoadLocalization()
             => SampleCharacterLocalization.CardsBatchLoc.AddEntity(this);
 
-        // 暂无美术资源，返回 null 使用占位图
-        public override CardImages LoadCardImages() => null;
+        public override CardImages LoadCardImages() => SampleCharacterImageLoader.LoadCardImages(this);
 
         protected CardConfig GetDefaultConfig() => SampleCharacterDefaultConfig.CardDefaultConfig();
     }

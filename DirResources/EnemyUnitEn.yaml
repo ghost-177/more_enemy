@@ -1,11 +1,3 @@
-SampleCharacterMod:
-  Title: 'Test'
-  Move:
-  - 'Attack a'
-  - 'Attack b'
-  - 'Attack c'
-  - 'Attack d'
-
 # ---- Act 1 Normal Enemies ----
 
 YukidoujiEW:

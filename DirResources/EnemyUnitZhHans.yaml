@@ -1,11 +1,3 @@
-SampleCharacterMod:
-  Title: '测试'
-  Move:
-  - '攻击 a'
-  - '攻击 b'
-  - '攻击 c'
-  - '攻击 d'
-
 # ---- 第一幕 普通敌人 ----
 
 YukidoujiEW:
