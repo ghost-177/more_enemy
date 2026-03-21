@@ -7,6 +7,7 @@ using LBoL.Core.Cards;
 using LBoLEntitySideloader.Attributes;
 using EternalWinterMod.Cards.Template;
 using LBoL.Core;
+using MadokaMod.Cards.Template;
 
 namespace EternalWinterMod.Cards
 {
@@ -16,7 +17,7 @@ namespace EternalWinterMod.Cards
         public override CardConfig MakeConfig()
         {
             var cfg = GetDefaultConfig();
-            cfg.Index = 30006;
+            cfg.Index = CardIndexGenerator.GetUniqueIndex(cfg);
             cfg.Value1 = 8;
             return cfg;
         }

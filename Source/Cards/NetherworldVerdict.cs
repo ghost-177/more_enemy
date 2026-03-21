@@ -8,6 +8,7 @@ using LBoLEntitySideloader.Attributes;
 using EternalWinterMod.Cards.Template;
 using EternalWinterMod.StatusEffects;
 using LBoL.Core;
+using MadokaMod.Cards.Template;
 
 namespace EternalWinterMod.Cards
 {
@@ -17,7 +18,7 @@ namespace EternalWinterMod.Cards
         public override CardConfig MakeConfig()
         {
             var cfg = GetDefaultConfig();
-            cfg.Index = 30005;
+            cfg.Index = CardIndexGenerator.GetUniqueIndex(cfg);
             cfg.RelativeEffects = new System.Collections.Generic.List<string>
                 { nameof(NetherworldVerdictSe) };
             return cfg;
