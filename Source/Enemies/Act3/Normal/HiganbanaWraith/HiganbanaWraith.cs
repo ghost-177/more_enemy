@@ -7,7 +7,7 @@ using LBoLEntitySideloader.Attributes;
 namespace EternalWinterMod.Enemies.Act3
 {
     [EntityLogic(typeof(HiganbanaWraithEWDef))]
-    public sealed class HiganbanaWraith : EnemyUnit
+    public sealed class HiganbanaWraithEW : EnemyUnit
     {
         // AI 节奏：攻击 → 防御 → 攻击 → 攻击（4回合周期）
         private int _turnCounter = 0;

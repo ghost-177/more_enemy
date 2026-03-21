@@ -7,7 +7,7 @@ using LBoLEntitySideloader.Attributes;
 namespace EternalWinterMod.Enemies.Act3
 {
     [EntityLogic(typeof(NetherMessengerEWDef))]
-    public sealed class NetherMessenger : EnemyUnit
+    public sealed class NetherMessengerEW : EnemyUnit
     {
         // AI 节奏：防御 → 攻击 → 攻击（3回合周期，先手防御）
         private int _turnCounter = 0;

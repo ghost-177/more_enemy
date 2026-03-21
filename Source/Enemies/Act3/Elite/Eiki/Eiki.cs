@@ -7,7 +7,7 @@ using LBoLEntitySideloader.Attributes;
 namespace EternalWinterMod.Enemies.Act3
 {
     [EntityLogic(typeof(EikiEWDef))]
-    public sealed class Eiki : EnemyUnit
+    public sealed class EikiEW : EnemyUnit
     {
         // AI 节奏：审判 → 裁决 → 审判 → 防御（4回合周期）
         private int _turnCounter = 0;

@@ -7,7 +7,7 @@ using LBoLEntitySideloader.Attributes;
 namespace EternalWinterMod.Enemies.Act1
 {
     [EntityLogic(typeof(MaiyoTsukiEWDef))]
-    public sealed class MaiyoTsuki : EnemyUnit
+    public sealed class MaiyoTsukiEW : EnemyUnit
     {
         public string AttackMoveName => base.GetSpellCardName(new int?(0), 0);
 

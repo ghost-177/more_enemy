@@ -7,7 +7,7 @@ using LBoLEntitySideloader.Attributes;
 namespace EternalWinterMod.Enemies.Act1
 {
     [EntityLogic(typeof(MeikaiChoreiEWDef))]
-    public sealed class MeikaiChorei : EnemyUnit
+    public sealed class MeikaiChoreiEW : EnemyUnit
     {
         // AI 节奏：攻击 → 攻击 → 防御 → 循环（3回合周期）
         private int _turnCounter = 0;

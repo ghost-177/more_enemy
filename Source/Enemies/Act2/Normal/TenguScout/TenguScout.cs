@@ -7,7 +7,7 @@ using LBoLEntitySideloader.Attributes;
 namespace EternalWinterMod.Enemies.Act2
 {
     [EntityLogic(typeof(TenguScoutEWDef))]
-    public sealed class TenguScout : EnemyUnit
+    public sealed class TenguScoutEW : EnemyUnit
     {
         // AI 节奏：攻击 → 攻击 → 防御（3回合周期）
         private int _turnCounter = 0;

@@ -7,7 +7,7 @@ using LBoLEntitySideloader.Attributes;
 namespace EternalWinterMod.Enemies.Act1
 {
     [EntityLogic(typeof(KaguyaEWDef))]
-    public sealed class Kaguya : EnemyUnit
+    public sealed class KaguyaEW : EnemyUnit
     {
         // AI 节奏：主攻击 → 连击（×2）→ 防御 → 循环（3回合周期）
         private int _turnCounter = 0;

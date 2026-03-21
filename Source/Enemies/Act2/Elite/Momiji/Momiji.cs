@@ -7,7 +7,7 @@ using LBoLEntitySideloader.Attributes;
 namespace EternalWinterMod.Enemies.Act2
 {
     [EntityLogic(typeof(MomijiEWDef))]
-    public sealed class Momiji : EnemyUnit
+    public sealed class MomijiEW : EnemyUnit
     {
         // AI 节奏：刀击 → 速斩×2 → 刀击 → 防御（4回合周期）
         private int _turnCounter = 0;

@@ -7,7 +7,7 @@ using LBoLEntitySideloader.Attributes;
 namespace EternalWinterMod.Enemies.Act2
 {
     [EntityLogic(typeof(SuwakoEWDef))]
-    public sealed class Suwako : EnemyUnit
+    public sealed class SuwakoEW : EnemyUnit
     {
         // AI 节奏（4回合周期）：
         //   0: 蛙击（普通）
