@@ -4,6 +4,7 @@ using LBoLEntitySideloader;
 using LBoLEntitySideloader.Entities;
 using LBoLEntitySideloader.Resource;
 using LBoL.Presentation;
+using EternalWinterMod.Localization;
 using System.Reflection;
 using UnityEngine;
 
@@ -38,6 +39,7 @@ namespace EternalWinterMod
             gameObject.hideFlags = HideFlags.HideAndDontSave;
 
             EntityManager.RegisterSelf();
+            SampleCharacterLocalization.Init();
             harmony.PatchAll();
 
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey(AddWatermark.API.GUID))

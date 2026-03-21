@@ -82,7 +82,12 @@
       "Bash(cmd /c \"dir \\\\\"D:\\\\\\\\Program FIles\\\\\\\\Steam\\\\\\\\steamapps\\\\\\\\common\\\\\\\\LBoL\\\\\\\\BepInEx\\\\\\\\plugins\\\\\"\" 2>&1)",
       "Bash(git ls-tree:*)",
       "Bash(git log:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Read(//d/Program Files \\(x86\\)/Steam/steamapps/common/**)",
+      "Read(//c/Program Files \\(x86\\)/Steam/steamapps/common/**)",
+      "Bash(dotnet run:*)",
+      "Read(//d//**)",
+      "Bash(/c/Users/taole/.dotnet/dotnet.exe run:*)"
     ]
   }
 }
