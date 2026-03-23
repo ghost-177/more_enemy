@@ -1,0 +1,71 @@
+# ---- 第一幕 普通敌人 ----
+
+YukidoujiEWGroup:
+  Name: '雪童子'
+
+MaiyoTsukiEWGroup:
+  Name: '迷途月兔'
+
+MeikaiChoreiEWGroup:
+  Name: '冥界蝶灵'
+
+# ---- 第一幕 精英 ----
+
+DaiyouseiEWGroup:
+  Name: '大妖精'
+
+KaguyaEWGroup:
+  Name: '蓬莱山辉夜'
+
+# ---- 第一幕 Boss ----
+
+LettyEWGroup:
+  Name: '蕾蒂·霍瓦多'
+
+# ---- 第二幕 普通敌人 ----
+
+TenguScoutEWGroup:
+  Name: '天狗斥候'
+
+KappaMechanicEWGroup:
+  Name: '河童机工'
+
+MountainFairyEWGroup:
+  Name: '山灵缚仙'
+
+# ---- 第二幕 精英 ----
+
+MomijiEWGroup:
+  Name: '犬走椛'
+
+KanakoEWGroup:
+  Name: '八坂神奈子'
+
+# ---- 第二幕 Boss ----
+
+SuwakoEWGroup:
+  Name: '洩矢诹访子'
+
+# ---- 第三幕 普通敌人 ----
+
+HiganbanaWraithEWGroup:
+  Name: '彼岸亡灵'
+
+YoumuPhantomEWGroup:
+  Name: '魂魄妖梦'
+
+NetherMessengerEWGroup:
+  Name: '幽冥使者'
+
+# ---- 第三幕 精英 ----
+
+EikiEWGroup:
+  Name: '四季映姬·亚马沙纳度'
+
+YuyukoEliteEWGroup:
+  Name: '西行寺幽幽子（精英）'
+
+# ---- 第三幕 Boss ----
+
+YuyukoEWGroup:
+  Name: '西行寺幽幽子'

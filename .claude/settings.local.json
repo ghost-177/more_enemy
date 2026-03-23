@@ -101,7 +101,15 @@
       "Read(//d/software/steam/steamapps/workshop/content/1140150/3483706823/BepInEx/**)",
       "Read(//d/software/steam/steamapps/workshop/content/1140150/3483706823/BepInEx/plugins//**)",
       "Read(//d/software/steam/steamapps/common/LBoL/Mods//**)",
-      "Read(//d/software/steam/steamapps/common/LBoL/Mods/**)"
+      "Read(//d/software/steam/steamapps/common/LBoL/Mods/**)",
+      "Read(//d/opt//**)",
+      "Read(//c//**)",
+      "Bash(\"/c/users/taole/.dotnet/dotnet.exe\" run:*)",
+      "Bash(do)",
+      "Bash(echo \"=== $f ===\")",
+      "Read(//d/riderProject/more_enemy/InspectDll/**)",
+      "Bash(done)",
+      "Bash(\"/c/users/taole/.dotnet/dotnet.exe\" build:*)"
     ]
   }
 }

@@ -8,6 +8,12 @@
 - **BepInEx 目录**：`$(GameFolder)\BepInEx\`
 - **Sideloader 插件**：`$(BepInExFolder)\plugins\LBoL-Entity-Sideloader\`
 
+## 工具路径
+
+- **dotnet.exe**：`C:\Users\taole\.dotnet\dotnet.exe`（不在系统 PATH 中，每次需要用绝对路径调用）
+  - 运行 InspectDll：`cd /d/riderProject/more_enemy/InspectDll && /c/users/taole/.dotnet/dotnet.exe run`
+  - 构建项目：`cd /d/riderProject/more_enemy && /c/users/taole/.dotnet/dotnet.exe build EternalWinterMod_windows.csproj`
+
 ## 技术栈
 
 | 组件 | 版本/说明 |

@@ -2,6 +2,7 @@ using LBoL.ConfigData;
 using LBoLEntitySideloader;
 using LBoLEntitySideloader.Entities;
 using EternalWinterMod.Config;
+using EternalWinterMod.Enemies.Localization;
 
 
 namespace EternalWinterMod.Enemies.Template
@@ -20,7 +21,10 @@ namespace EternalWinterMod.Enemies.Template
 
         public EnemyGroupConfig GetEnemyGroupDefaultConfig()
         {
-            return SampleCharacterDefaultConfig.EnemyGroupDefaultConfig();
+            var config = SampleCharacterDefaultConfig.EnemyGroupDefaultConfig();
+            var id = GetId().ToString();
+            config.Name = EnemyGroupLocalize.GetGroupName(id, id);
+            return config;
         }
     }
 }

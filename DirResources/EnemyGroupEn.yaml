@@ -1,0 +1,71 @@
+# ---- Act 1 Normal Enemies ----
+
+YukidoujiEWGroup:
+  Name: 'Snow Fairy'
+
+MaiyoTsukiEWGroup:
+  Name: 'Lost Moon Rabbits'
+
+MeikaiChoreiEWGroup:
+  Name: 'Netherworld Butterfly Spirit'
+
+# ---- Act 1 Elite Enemies ----
+
+DaiyouseiEWGroup:
+  Name: 'Great Fairy'
+
+KaguyaEWGroup:
+  Name: 'Kaguya Houraisan'
+
+# ---- Act 1 Boss ----
+
+LettyEWGroup:
+  Name: 'Letty Whiterock'
+
+# ---- Act 2 Normal Enemies ----
+
+TenguScoutEWGroup:
+  Name: 'Tengu Scout'
+
+KappaMechanicEWGroup:
+  Name: 'Kappa Mechanic'
+
+MountainFairyEWGroup:
+  Name: 'Mountain Spirit Fairy'
+
+# ---- Act 2 Elite Enemies ----
+
+MomijiEWGroup:
+  Name: 'Inubashiri Momiji'
+
+KanakoEWGroup:
+  Name: 'Yasaka Kanako'
+
+# ---- Act 2 Boss ----
+
+SuwakoEWGroup:
+  Name: 'Moriya Suwako'
+
+# ---- Act 3 Normal Enemies ----
+
+HiganbanaWraithEWGroup:
+  Name: 'Higanbana Wraith'
+
+YoumuPhantomEWGroup:
+  Name: 'Youmu Phantom'
+
+NetherMessengerEWGroup:
+  Name: 'Nether Messenger'
+
+# ---- Act 3 Elite Enemies ----
+
+EikiEWGroup:
+  Name: 'Shiki Eiki Yamaxanadu'
+
+YuyukoEliteEWGroup:
+  Name: 'Saigyouji Yuyuko (Elite)'
+
+# ---- Act 3 Boss ----
+
+YuyukoEWGroup:
+  Name: 'Saigyouji Yuyuko'
