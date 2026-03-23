@@ -29,7 +29,7 @@ namespace EternalWinterMod.Cards
         protected override IEnumerable<BattleAction> Actions(
             UnitSelector selector, ManaGroup consumingMana, Interaction precondition)
         {
-            yield return new LoseTurnManaAction(new ManaGroup() { Any = 1 });
+            yield return new LockRandomTurnManaAction(1);
         }
     }
 }
