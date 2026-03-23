@@ -73,6 +73,7 @@
       "Bash(cd \"D:\\\\riderProject\\\\lbol-sample-adventure\" && \"/c/Program Files/JetBrains/Rider/r2r/2025.2.4R/1A525C384496EE987727F6BA55FE60D/windows-x64/dotnet/dotnet.exe\" build SampleCharacterMod_windows.csproj 2>&1 | tail -3)",
       "Bash(cd:*)",
       "Bash(find:*)",
+      "Bash(cmd:*)",
       "WebFetch(domain:github.com)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(cmd /c \"cd D:\\\\riderProject\\\\lbol-sample-adventure\\\\InspectDll && dotnet run 2>&1\")",
@@ -87,7 +88,20 @@
       "Read(//c/Program Files \\(x86\\)/Steam/steamapps/common/**)",
       "Bash(dotnet run:*)",
       "Read(//d//**)",
-      "Bash(/c/Users/taole/.dotnet/dotnet.exe run:*)"
+      "Bash(/c/Users/taole/.dotnet/dotnet.exe run:*)",
+      "Bash(cmd /c \"dotnet run\")",
+      "Bash(cmd /c \"cd /d D:\\\\riderProject\\\\more_enemy\\\\InspectDll && dotnet run\" 2>&1)",
+      "Bash(cmd /c \"cd /d D:\\\\riderProject\\\\more_enemy\\\\InspectDll && dotnet run > output.txt 2>&1 && type output.txt\")",
+      "Bash(dir \"C:\\\\Program Files\\\\dotnet\\\\dotnet.exe\")",
+      "Bash(echo \"exit: $?\")",
+      "Bash(cmd /c \"cd /d D:\\\\riderProject\\\\more_enemy\\\\InspectDll && dotnet run 2>&1\")",
+      "Bash(cmd /c \"cd /d D:\\\\riderProject\\\\more_enemy\\\\InspectDll && dotnet run > C:\\\\Temp\\\\inspect_out.txt 2>&1 & type C:\\\\Temp\\\\inspect_out.txt\")",
+      "Read(//d/software/steam/steamapps/common/LBoL/BepInEx/**)",
+      "Read(//d/software/steam/steamapps/workshop/content/1140150/3483706823/BepInEx//**)",
+      "Read(//d/software/steam/steamapps/workshop/content/1140150/3483706823/BepInEx/**)",
+      "Read(//d/software/steam/steamapps/workshop/content/1140150/3483706823/BepInEx/plugins//**)",
+      "Read(//d/software/steam/steamapps/common/LBoL/Mods//**)",
+      "Read(//d/software/steam/steamapps/common/LBoL/Mods/**)"
     ]
   }
 }

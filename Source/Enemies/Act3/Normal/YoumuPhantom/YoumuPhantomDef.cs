@@ -41,8 +41,8 @@ namespace EternalWinterMod.Enemies.Act3
             config.PowerLoot = new MinMax(50, 65);
             config.BluePointLoot = new MinMax(0, 0);
 
-            config.Gun1 = new List<string> { GunNameID.GetGunFromId(800) };
-            config.Gun2 = new List<string> { GunNameID.GetGunFromId(800) };
+            config.Gun1 = new List<string> { "Instant" };
+            config.Gun2 = new List<string> { "Instant" };
 
             return config;
         }

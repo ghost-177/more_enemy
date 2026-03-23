@@ -160,10 +160,10 @@ namespace EternalWinterMod.Config
                 Count2Lunatic: 1,
                 PowerLoot: new MinMax(0, 0),
                 BluePointLoot: new MinMax(0, 0),
-                Gun1: new List<string> { GunNameID.GetGunFromId(800) },
-                Gun2: new List<string> { GunNameID.GetGunFromId(800) },
-                Gun3: new List<string> { GunNameID.GetGunFromId(800) },
-                Gun4: new List<string> { GunNameID.GetGunFromId(800) }
+                Gun1: new List<string> { "Instant" },
+                Gun2: new List<string> { "Instant" },
+                Gun3: new List<string> { "Instant" },
+                Gun4: new List<string> { "Instant" }
             );
         }
 

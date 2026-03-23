@@ -13,7 +13,6 @@ namespace EternalWinterMod
 {
     [BepInPlugin(PInfo.GUID, PInfo.Name, PInfo.version)]
     [BepInDependency(LBoLEntitySideloader.PluginInfo.GUID, BepInDependency.DependencyFlags.HardDependency)]
-    [BepInDependency(AddWatermark.API.GUID, BepInDependency.DependencyFlags.SoftDependency)]
     [BepInProcess("LBoL.exe")]
     public class BepinexPlugin : BaseUnityPlugin
     {
@@ -38,12 +37,10 @@ namespace EternalWinterMod
             DontDestroyOnLoad(gameObject);
             gameObject.hideFlags = HideFlags.HideAndDontSave;
 
-            EntityManager.RegisterSelf();
             SampleCharacterLocalization.Init();
+            EntityManager.RegisterSelf();
             harmony.PatchAll();
-
-            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey(AddWatermark.API.GUID))
-                WatermarkWrapper.ActivateWatermark();
+            
         }
 
         // -----------------------------------------------------------------
