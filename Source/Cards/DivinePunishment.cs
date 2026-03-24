@@ -11,7 +11,7 @@ using MadokaMod.Cards.Template;
 
 namespace EternalWinterMod.Cards
 {
-    // 神罚令：飘忽；打出时失去1点法力
+    // 神罚令：飘忽；打出时透支1点法力
     public sealed class DivinePunishmentDef : CurseCardTemplate
     {
         public override CardConfig MakeConfig()
