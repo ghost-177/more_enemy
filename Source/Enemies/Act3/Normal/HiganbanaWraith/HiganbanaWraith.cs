@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using LBoL.Core.Battle;
+using LBoL.Core.StatusEffects;
 using LBoL.Core.Units;
 using LBoLEntitySideloader.Attributes;
 
@@ -9,11 +10,11 @@ namespace EternalWinterMod.Enemies.Act3
     [EntityLogic(typeof(HiganbanaWraithEWDef))]
     public sealed class HiganbanaWraithEW : EnemyUnit
     {
-        // AI 节奏：攻击 → 防御 → 攻击 → 攻击（4回合周期）
+        // AI 节奏：夺魂（攻击+施弱1）→ 幽灵薄纱（防御）→ 夺魂 → 夺魂（4回合周期）
         private int _turnCounter = 0;
 
-        public string AttackMoveName => base.GetSpellCardName(new int?(0), 0);
-        public string DefendMoveName => base.GetSpellCardName(new int?(0), 1);
+        public string SoulDrainMoveName  => base.GetSpellCardName(new int?(0), 0);
+        public string SpiritVeilMoveName => base.GetSpellCardName(new int?(0), 1);
 
         protected override void OnEnterBattle(BattleController battle)
         {
@@ -23,9 +24,15 @@ namespace EternalWinterMod.Enemies.Act3
         protected override IEnumerable<IEnemyMove> GetTurnMoves()
         {
             if (_turnCounter == 1)
-                yield return base.DefendMove(this, this.DefendMoveName, base.Defend, 0, 0, true, null);
+            {
+                yield return base.DefendMove(this, this.SpiritVeilMoveName, base.Defend, 0, 0, true, null);
+            }
             else
-                yield return base.AttackMove(this.AttackMoveName, base.Gun1, base.Damage1);
+            {
+                // 夺魂：攻击并对玩家施加虚弱(1)
+                yield return base.AttackMove(this.SoulDrainMoveName, base.Gun1, base.Damage1);
+                yield return base.NegativeMove(this.SoulDrainMoveName, typeof(Weak), 1, null, true, false, null);
+            }
         }
 
         protected override void UpdateMoveCounters()

@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using LBoL.Core.Battle;
+using LBoL.Core.StatusEffects;
 using LBoL.Core.Units;
 using LBoLEntitySideloader.Attributes;
+using EternalWinterMod.Cards;
 
 
 namespace EternalWinterMod.Enemies.Act3
@@ -9,12 +11,12 @@ namespace EternalWinterMod.Enemies.Act3
     [EntityLogic(typeof(EikiEWDef))]
     public sealed class EikiEW : EnemyUnit
     {
-        // AI 节奏：审判 → 裁决 → 审判 → 防御（4回合周期）
+        // AI 节奏：审判（施易伤2）→ 裁决（将冥界法令加入玩家弃牌堆）→ 审判 → 公正防壁（防御）（4回合周期）
         private int _turnCounter = 0;
 
-        public string JudgmentMoveName => base.GetSpellCardName(new int?(0), 0);
-        public string VerdictMoveName  => base.GetSpellCardName(new int?(0), 1);
-        public string DefendMoveName   => base.GetSpellCardName(new int?(0), 2);
+        public string JudgmentMoveName     => base.GetSpellCardName(new int?(0), 0);
+        public string VerdictMoveName      => base.GetSpellCardName(new int?(0), 1);
+        public string RighteousBarrierName => base.GetSpellCardName(new int?(0), 2);
 
         protected override void OnEnterBattle(BattleController battle)
         {
@@ -27,13 +29,15 @@ namespace EternalWinterMod.Enemies.Act3
             {
                 case 0:
                 case 2:
-                    yield return base.AttackMove(this.JudgmentMoveName, base.Gun1, base.Damage1);
+                    // 审判：对玩家施加易伤(2)
+                    yield return base.NegativeMove(this.JudgmentMoveName, typeof(Vulnerable), 2, null, true, false, null);
                     yield break;
                 case 1:
-                    yield return base.AttackMove(this.VerdictMoveName, base.Gun2, base.Damage2);
+                    // 裁决：将1张冥界法令置入玩家弃牌堆
+                    yield return base.AddCardMove(this.VerdictMoveName, typeof(NetherworldDecree), 1, EnemyUnit.AddCardZone.Discard, null, false);
                     yield break;
                 case 3:
-                    yield return base.DefendMove(this, this.DefendMoveName, base.Defend, 0, 0, true, null);
+                    yield return base.DefendMove(this, this.RighteousBarrierName, base.Defend, 0, 0, true, null);
                     yield break;
             }
             yield break;

@@ -109,7 +109,9 @@
       "Bash(echo \"=== $f ===\")",
       "Read(//d/riderProject/more_enemy/InspectDll/**)",
       "Bash(done)",
-      "Bash(\"/c/users/taole/.dotnet/dotnet.exe\" build:*)"
+      "Bash(\"/c/users/taole/.dotnet/dotnet.exe\" build:*)",
+      "Bash(/c/users/taole/.dotnet/dotnet.exe run:*)",
+      "Bash(/c/users/taole/.dotnet/dotnet.exe build:*)"
     ]
   }
 }

@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using LBoL.Core.Battle;
+using LBoL.Core.StatusEffects;
 using LBoL.Core.Units;
 using LBoLEntitySideloader.Attributes;
+using EternalWinterMod.Cards;
 
 
 namespace EternalWinterMod.Enemies.Act3
@@ -30,7 +32,10 @@ namespace EternalWinterMod.Enemies.Act3
                     yield return base.AttackMove(this.GhostDanceMoveName, base.Gun1, base.Damage1);
                     yield break;
                 case 1:
+                    // 春死满开：重击并对玩家施加虚弱(2)，同时将1张彼岸花加入玩家弃牌堆
                     yield return base.AttackMove(this.SpringDeathMoveName, base.Gun2, base.Damage2);
+                    yield return base.NegativeMove(this.SpringDeathMoveName, typeof(Weak), 2, null, true, false, null);
+                    yield return base.AddCardMove(this.SpringDeathMoveName, typeof(HiganFlower), 1, EnemyUnit.AddCardZone.Discard, null, false);
                     yield break;
                 case 2:
                     yield return base.DefendMove(this, this.DefendMoveName, base.Defend, 0, 0, true, null);

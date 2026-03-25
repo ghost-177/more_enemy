@@ -1,0 +1,73 @@
+# 敌人模型名称本地化（中文）
+
+# ---- 第一幕 普通敌人 ----
+
+YukidoujiEW:
+  Default: '雪童子'
+
+MaiyoTsukiEW:
+  Default: '迷途月兔'
+
+MeikaiChoreiEW:
+  Default: '冥界蝶灵'
+
+# ---- 第一幕 精英 ----
+
+DaiyouseiEW:
+  Default: '大妖精'
+
+KaguyaEW:
+  Default: '蓬莱山辉夜'
+
+# ---- 第一幕 Boss ----
+
+LettyEW:
+  Default: '蕾蒂·霍瓦多'
+
+# ---- 第二幕 普通敌人 ----
+
+TenguScoutEW:
+  Default: '天狗斥候'
+
+KappaMechanicEW:
+  Default: '河童机工'
+
+MountainFairyEW:
+  Default: '山灵缚仙'
+
+# ---- 第二幕 精英 ----
+
+MomijiEW:
+  Default: '犬走椛'
+
+KanakoEW:
+  Default: '八坂神奈子'
+
+# ---- 第二幕 Boss ----
+
+SuwakoEW:
+  Default: '洩矢诹访子'
+
+# ---- 第三幕 普通敌人 ----
+
+HiganbanaWraithEW:
+  Default: '彼岸亡灵'
+
+YoumuPhantomEW:
+  Default: '魂魄妖梦'
+
+NetherMessengerEW:
+  Default: '幽冥使者'
+
+# ---- 第三幕 精英 ----
+
+EikiEW:
+  Default: '四季映姬·亚马沙纳度'
+
+YuyukoEliteEW:
+  Default: '西行寺幽幽子'
+
+# ---- 第三幕 Boss ----
+
+YuyukoEW:
+  Default: '西行寺幽幽子'

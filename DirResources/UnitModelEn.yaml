@@ -1,1 +1,74 @@
-# Enemy unit model localization (empty - models reuse vanilla spine animations)
+# Enemy unit model name localization
+# Format: Default = display name, Short = abbreviated name (optional)
+
+# ---- Act 1 Normal ----
+
+YukidoujiEW:
+  Default: 'Snow Fairy'
+
+MaiyoTsukiEW:
+  Default: 'Lost Moon Rabbit'
+
+MeikaiChoreiEW:
+  Default: 'Netherworld Butterfly Spirit'
+
+# ---- Act 1 Elite ----
+
+DaiyouseiEW:
+  Default: 'Great Fairy'
+
+KaguyaEW:
+  Default: 'Kaguya Houraisan'
+
+# ---- Act 1 Boss ----
+
+LettyEW:
+  Default: 'Letty Whiterock'
+
+# ---- Act 2 Normal ----
+
+TenguScoutEW:
+  Default: 'Tengu Scout'
+
+KappaMechanicEW:
+  Default: 'Kappa Mechanic'
+
+MountainFairyEW:
+  Default: 'Mountain Spirit Fairy'
+
+# ---- Act 2 Elite ----
+
+MomijiEW:
+  Default: 'Inubashiri Momiji'
+
+KanakoEW:
+  Default: 'Yasaka Kanako'
+
+# ---- Act 2 Boss ----
+
+SuwakoEW:
+  Default: 'Moriya Suwako'
+
+# ---- Act 3 Normal ----
+
+HiganbanaWraithEW:
+  Default: 'Higanbana Wraith'
+
+YoumuPhantomEW:
+  Default: 'Youmu Phantom'
+
+NetherMessengerEW:
+  Default: 'Nether Messenger'
+
+# ---- Act 3 Elite ----
+
+EikiEW:
+  Default: 'Shiki Eiki Yamaxanadu'
+
+YuyukoEliteEW:
+  Default: 'Saigyouji Yuyuko'
+
+# ---- Act 3 Boss ----
+
+YuyukoEW:
+  Default: 'Saigyouji Yuyuko'

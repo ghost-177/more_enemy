@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using LBoL.Core.Battle;
+using LBoL.Core.StatusEffects;
 using LBoL.Core.Units;
 using LBoLEntitySideloader.Attributes;
 
@@ -9,28 +10,33 @@ namespace EternalWinterMod.Enemies.Act2
     [EntityLogic(typeof(TenguScoutEWDef))]
     public sealed class TenguScoutEW : EnemyUnit
     {
-        // AI 节奏：攻击 → 攻击 → 防御（3回合周期）
-        private int _turnCounter = 0;
+        // AI 节奏：风刃斩（攻击）→ 戒备姿态（自身+火力1）→ 循环（交替）
+        private bool _lastWasAttack = false;
 
-        public string AttackMoveName => base.GetSpellCardName(new int?(0), 0);
-        public string DefendMoveName => base.GetSpellCardName(new int?(0), 1);
+        public string WindSlashMoveName   => base.GetSpellCardName(new int?(0), 0);
+        public string GuardStanceMoveName => base.GetSpellCardName(new int?(0), 1);
 
         protected override void OnEnterBattle(BattleController battle)
         {
-            _turnCounter = 0;
+            _lastWasAttack = false;
         }
 
         protected override IEnumerable<IEnemyMove> GetTurnMoves()
         {
-            if (_turnCounter == 2)
-                yield return base.DefendMove(this, this.DefendMoveName, base.Defend, 0, 0, true, null);
+            if (!_lastWasAttack)
+            {
+                yield return base.AttackMove(this.WindSlashMoveName, base.Gun1, base.Damage1);
+            }
             else
-                yield return base.AttackMove(this.AttackMoveName, base.Gun1, base.Damage1);
+            {
+                // 戒备姿态：自身获得火力1
+                yield return base.PositiveMove(this.GuardStanceMoveName, typeof(Firepower), 1, null, false, null);
+            }
         }
 
         protected override void UpdateMoveCounters()
         {
-            _turnCounter = (_turnCounter + 1) % 3;
+            _lastWasAttack = !_lastWasAttack;
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using LBoL.Core.Battle;
+using LBoL.Core.StatusEffects;
 using LBoL.Core.Units;
 using LBoLEntitySideloader.Attributes;
 
@@ -34,7 +35,8 @@ namespace EternalWinterMod.Enemies.Act2
                     yield return base.AttackMove(this.FrogStrikeMoveName, base.Gun1, base.Damage1);
                     yield break;
                 case 1:
-                    yield return base.AttackMove(this.EarthquakeMoveName, base.Gun2, base.Damage2);
+                    // 大地震：对玩家施加易伤(2)
+                    yield return base.NegativeMove(this.EarthquakeMoveName, typeof(Vulnerable), 2, null, true, false, null);
                     yield break;
                 case 2:
                     yield return base.DefendMove(this, this.DefendMoveName, base.Defend, 0, 0, true, null);

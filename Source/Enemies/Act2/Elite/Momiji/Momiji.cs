@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using LBoL.Core.Battle;
+using LBoL.Core.StatusEffects;
 using LBoL.Core.Units;
 using LBoLEntitySideloader.Attributes;
 
@@ -33,7 +34,8 @@ namespace EternalWinterMod.Enemies.Act2
                     yield return base.AttackMove(this.RapidMoveName, base.Gun2, base.Damage2, base.Count2, false, null, false);
                     yield break;
                 case 3:
-                    yield return base.DefendMove(this, this.DefendMoveName, base.Defend, 0, 0, true, null);
+                    // 盾守：自身获得灵力(2)，使防御更有效
+                    yield return base.PositiveMove(this.DefendMoveName, typeof(Spirit), 2, null, false, null);
                     yield break;
             }
             yield break;
