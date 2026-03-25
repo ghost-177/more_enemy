@@ -26,7 +26,13 @@ namespace EternalWinterMod.Model
 
         public override ModelOption LoadModelOptions()
         {
-            return new ModelOption(ResourcesHelper.LoadSpineUnitAsync(VanillaModelName));
+            // 根据原版模型的类型选择正确的 ModelOption
+            // SingleSprite=0, Spine=1
+            UnitModelConfig vanillaConfig = UnitModelConfig.FromName(VanillaModelName);
+            if (vanillaConfig != null && vanillaConfig.Type == 1)
+                return new ModelOption(ResourcesHelper.LoadSpineUnitAsync(VanillaModelName));
+            else
+                return new ModelOption(ResourcesHelper.LoadSimpleUnitSpriteAsync(VanillaModelName));
         }
 
         public override UniTask<Sprite> LoadSpellSprite()

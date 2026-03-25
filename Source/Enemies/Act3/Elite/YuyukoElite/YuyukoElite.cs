@@ -33,7 +33,7 @@ namespace EternalWinterMod.Enemies.Act3
                 case 2:
                     // 死亡领域：重击并对玩家施加虚弱(2)
                     yield return base.AttackMove(this.DeathRealmMoveName, base.Gun2, base.Damage2);
-                    yield return base.NegativeMove(this.DeathRealmMoveName, typeof(Weak), 2, null, true, false, null);
+                    yield return base.NegativeMove(this.DeathRealmMoveName, typeof(Weak), null, 2, false, false, null);
                     yield break;
                 case 3:
                     yield return base.DefendMove(this, this.DefendMoveName, base.Defend, 0, 0, true, null);

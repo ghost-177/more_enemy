@@ -1,3 +1,23 @@
+LettyFreezeAuraSE:
+  Name: Freeze Aura
+  Description: At the start of the player's turn, the player loses {Level} mana (frozen).
+
+YukidoujiWinterBreathSE:
+  Name: Winter's Breath
+  Description: At the start of the player's turn, applies 1 Weak to the player.
+
+DaiyouseiCrystalShieldSE:
+  Name: Crystal Ice Shield
+  Description: At the end of this unit's turn, automatically gains 8 Block (unless shield was fully broken this turn).
+
+KappaMechanicInventionSE:
+  Name: Wondrous Invention
+  Description: At the start of battle, added 2 Broken Device curse cards to the player's discard pile.
+
+YuyukoNetherworldRealmSE:
+  Name: Netherworld Realm
+  Description: At the start of this unit's turn, automatically gains 10 Shield (protected by nether energy).
+
 NetherworldVerdictSe:
   Name: Netherworld Verdict
   Description: At end of turn, lose {Level}x2 HP (piercing). Removed when the source card leaves hand.

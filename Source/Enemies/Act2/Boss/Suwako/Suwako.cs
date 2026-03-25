@@ -36,7 +36,7 @@ namespace EternalWinterMod.Enemies.Act2
                     yield break;
                 case 1:
                     // 大地震：对玩家施加易伤(2)
-                    yield return base.NegativeMove(this.EarthquakeMoveName, typeof(Vulnerable), 2, null, true, false, null);
+                    yield return base.NegativeMove(this.EarthquakeMoveName, typeof(Vulnerable), null, 2, false, false, null);
                     yield break;
                 case 2:
                     yield return base.DefendMove(this, this.DefendMoveName, base.Defend, 0, 0, true, null);

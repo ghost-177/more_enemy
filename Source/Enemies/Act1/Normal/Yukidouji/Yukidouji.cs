@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using LBoL.Core;
 using LBoL.Core.Battle;
 using LBoL.Core.Battle.BattleActions;
 using LBoL.Core.Units;
@@ -26,6 +27,13 @@ namespace EternalWinterMod.Enemies.Act1
         {
             this.Last = MoveType.Defend;
             this.Next = MoveType.Attack;
+            ReactBattleEvent(Battle.BattleStarted, OnBattleStarted);
+        }
+
+        private IEnumerable<BattleAction> OnBattleStarted(GameEventArgs args)
+        {
+            yield return new ApplyStatusEffectAction(
+                typeof(YukidoujiWinterBreathSE), this, null, null, null, null, 0f, false);
         }
 
         protected override IEnumerable<IEnemyMove> GetTurnMoves()

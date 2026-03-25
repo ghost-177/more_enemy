@@ -30,7 +30,7 @@ namespace EternalWinterMod.Enemies.Act3
                 case 0:
                 case 2:
                     // 审判：对玩家施加易伤(2)
-                    yield return base.NegativeMove(this.JudgmentMoveName, typeof(Vulnerable), 2, null, true, false, null);
+                    yield return base.NegativeMove(this.JudgmentMoveName, typeof(Vulnerable), null, 2, false, false, null);
                     yield break;
                 case 1:
                     // 裁决：将1张冥界法令置入玩家弃牌堆

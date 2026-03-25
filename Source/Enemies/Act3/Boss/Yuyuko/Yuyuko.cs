@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using LBoL.Core;
 using LBoL.Core.Battle;
+using LBoL.Core.Battle.BattleActions;
 using LBoL.Core.StatusEffects;
 using LBoL.Core.Units;
 using LBoLEntitySideloader.Attributes;
@@ -22,6 +24,13 @@ namespace EternalWinterMod.Enemies.Act3
         protected override void OnEnterBattle(BattleController battle)
         {
             _turnCounter = 0;
+            ReactBattleEvent(Battle.BattleStarted, OnBattleStarted);
+        }
+
+        private IEnumerable<BattleAction> OnBattleStarted(GameEventArgs args)
+        {
+            yield return new ApplyStatusEffectAction(
+                typeof(YuyukoNetherworldRealmSE), this, null, null, null, null, 0f, false);
         }
 
         protected override IEnumerable<IEnemyMove> GetTurnMoves()
@@ -34,7 +43,7 @@ namespace EternalWinterMod.Enemies.Act3
                 case 1:
                     // 春死满开：重击并对玩家施加虚弱(2)，同时将1张彼岸花加入玩家弃牌堆
                     yield return base.AttackMove(this.SpringDeathMoveName, base.Gun2, base.Damage2);
-                    yield return base.NegativeMove(this.SpringDeathMoveName, typeof(Weak), 2, null, true, false, null);
+                    yield return base.NegativeMove(this.SpringDeathMoveName, typeof(Weak), null, 2, false, false, null);
                     yield return base.AddCardMove(this.SpringDeathMoveName, typeof(HiganFlower), 1, EnemyUnit.AddCardZone.Discard, null, false);
                     yield break;
                 case 2:

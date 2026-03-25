@@ -31,7 +31,7 @@ namespace EternalWinterMod.Enemies.Act3
             {
                 // 夺魂：攻击并对玩家施加虚弱(1)
                 yield return base.AttackMove(this.SoulDrainMoveName, base.Gun1, base.Damage1);
-                yield return base.NegativeMove(this.SoulDrainMoveName, typeof(Weak), 1, null, true, false, null);
+                yield return base.NegativeMove(this.SoulDrainMoveName, typeof(Weak), null, 1, false, false, null);
             }
         }
 

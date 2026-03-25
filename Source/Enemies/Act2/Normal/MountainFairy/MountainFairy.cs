@@ -27,7 +27,7 @@ namespace EternalWinterMod.Enemies.Act2
             {
                 case 0:
                     // 束缚咒：对玩家施加虚弱(2)
-                    yield return base.NegativeMove(this.BindingCurseName, typeof(Weak), 2, null, true, false, null);
+                    yield return base.NegativeMove(this.BindingCurseName, typeof(Weak), null, 1, false, false, null);
                     yield break;
                 case 1:
                     yield return base.DefendMove(this, this.SpiritBarrierName, base.Defend, 0, 0, true, null);

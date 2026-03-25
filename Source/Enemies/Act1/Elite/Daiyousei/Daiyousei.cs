@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using LBoL.Core;
 using LBoL.Core.Battle;
+using LBoL.Core.Battle.BattleActions;
 using LBoL.Core.Units;
 using LBoLEntitySideloader.Attributes;
 
@@ -19,6 +21,13 @@ namespace EternalWinterMod.Enemies.Act1
         protected override void OnEnterBattle(BattleController battle)
         {
             _turnCounter = 0;
+            ReactBattleEvent(Battle.BattleStarted, OnBattleStarted);
+        }
+
+        private IEnumerable<BattleAction> OnBattleStarted(GameEventArgs args)
+        {
+            yield return new ApplyStatusEffectAction(
+                typeof(DaiyouseiCrystalShieldSE), this, null, null, null, null, 0f, false);
         }
 
         protected override IEnumerable<IEnemyMove> GetTurnMoves()

@@ -26,7 +26,7 @@ namespace EternalWinterMod.Enemies.Act1
             if (_turnCounter == 2)
             {
                 // 幽灵薄纱：对玩家施加虚弱(1)
-                yield return base.NegativeMove(this.GhostlyVeilName, typeof(Weak), 1, null, true, false, null);
+                yield return base.NegativeMove(this.GhostlyVeilName, typeof(Weak), null, 1, false, false, null);
             }
             else
             {

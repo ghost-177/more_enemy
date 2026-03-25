@@ -549,3 +549,120 @@ lbol_sample_character_mod-main/
 - `Owner.TurnEnded` → `GameEvent<UnitEventArgs>`，handler：`IEnumerable<BattleAction> Method(UnitEventArgs args)`
 - `Battle.CardUsed` → `GameEvent<CardUsingEventArgs>`，handler：`IEnumerable<BattleAction> Method(CardUsingEventArgs args)`，`args.Card` 可用
 - `GunType` 命名空间：`LBoL.Core.Cards`
+
+---
+
+## EnemyUnit 行为系统（从反编译和运行时错误中确认）
+
+### NegativeMove 完整签名（反编译确认）
+
+```csharp
+IEnemyMove NegativeMove(
+    string move,           // 技能名（GetSpellCardName 返回值）
+    Type type,             // SE 类型（typeof(Weak) 等）
+    int? level,            // SE 等级
+    int? duration,         // SE 持续时间 ⚠️ 不能为 null（若 SE 有 HasDuration=true）
+    bool startAutoDecreasing, // 是否自动递减 duration
+    bool withSpell,        // 是否显示符卡图标
+    PerformAction performAction // 可为 null
+)
+```
+
+**关键陷阱**：`Weak`、`Vulnerable` 等游戏内置 SE 的 `HasDuration=true`，必须提供非 null 的 `duration`。
+传 `null` 会在运行时抛出 `ArgumentException: Weak's Duration is not provided.`
+
+**正确用法**（通过反编译原版 Cirno/精英敌人确认）：
+```csharp
+// level=null（Weak/Vulnerable 不用 level 控制强度，用 duration 控制持续回合数）
+// duration=1 或 2（持续回合数）
+// startAutoDecreasing=false（让 SE 的内部 DurationDecreaseTiming 控制递减时机）
+// startAutoDecreasing=true 会立刻开始递减，可能在玩家回合前就归零！
+yield return base.NegativeMove(this.MoveName, typeof(Weak), null, 1, false, false, null);
+// 精英/Boss 可用 duration=2
+yield return base.NegativeMove(this.MoveName, typeof(Vulnerable), null, 2, false, false, null);
+```
+
+### UnitModelTemplate 模型类型系统（反编译确认）
+
+`UnitView.ModelType` 枚举值：
+- `SingleSprite = 0` — 静态精灵图（简单敌人/小妖精等）
+- `Spine = 1` — Spine 骨骼动画（命名角色）
+- `Effect = 2` — 特效型
+
+`ModelOption` 构造函数：
+- `new ModelOption(UniTask<Sprite>)` → modelType = 0 (SingleSprite)
+- `new ModelOption(UniTask<SkeletonDataAsset>)` → modelType = 1 (Spine)
+- `new ModelOption(string effectName)` → modelType = 2 (Effect)
+
+**关键陷阱**：`UnitModelTemplate.CheckModelOptions()` 会检查 `MakeConfig().Type` 是否与 `LoadModelOptions().modelType` 一致，不一致报错并导致模型加载失败退回到默认模型（Koishi）。
+
+**解决方案**（在 `LoadModelOptions()` 中动态判断）：
+```csharp
+public override ModelOption LoadModelOptions()
+{
+    UnitModelConfig vanillaConfig = UnitModelConfig.FromName(VanillaModelName);
+    if (vanillaConfig != null && vanillaConfig.Type == 1) // Spine
+        return new ModelOption(ResourcesHelper.LoadSpineUnitAsync(VanillaModelName));
+    else // SingleSprite (type=0) 或 config 不存在时默认用 Sprite
+        return new ModelOption(ResourcesHelper.LoadSimpleUnitSpriteAsync(VanillaModelName));
+}
+```
+
+### ResourcesHelper（LBoL.Presentation）静态方法（反编译确认，含 string 参数）
+
+> **注意**：InspectDll 中用 `Parameters.Skip(1)` 查看方法参数会错误跳过第一个参数（适用于实例方法的 this，但静态方法无 this）。对静态方法应使用 `Parameters` 全部列出。
+
+```csharp
+// 加载角色名对应的 Spine 动画
+ResourcesHelper.LoadSpineUnitAsync(string characterName) // → UniTask<SkeletonDataAsset>
+
+// 加载角色名对应的静态精灵图
+ResourcesHelper.LoadSimpleUnitSpriteAsync(string characterName) // → UniTask<Sprite>
+
+// 加载符卡头像
+ResourcesHelper.LoadSpellPortraitAsync(string characterName) // → UniTask<Sprite>
+```
+
+### 常见原版模型类型参考
+
+| VanillaModelName | Type | 说明 |
+|---|---|---|
+| `LightFairy` | 0 (SingleSprite) | 普通光之妖精 |
+| `WhiteFairy` | 0 (SingleSprite) | 白色妖精 |
+| `LazyRabbit` | 待确认 | |
+| `Cirno` | 1 (Spine) | 琪露诺（有 Spine 动画） |
+| `Kaguya` | 1 (Spine) | 辉夜 |
+| `Eternity` | 待确认 | |
+
+> 判断方法：`UnitModelConfig.FromName(name)?.Type` — 0=Sprite, 1=Spine
+
+### EnemyUnit 战斗开始时施加 SE（ReactBattleEvent 模式）
+
+**关键陷阱**：`OnEnterBattle(BattleController battle)` 是 `void` 方法，无法直接 `yield return` BattleAction。
+不能在此方法里调用 `React(new ApplyStatusEffectAction(...))` — `React(Reactor)` 接受的是 `Reactor` 类型，不是 `BattleAction`。
+
+**正确模式**（从反编译原版 Cirno / Koishi 确认）：在 `OnEnterBattle` 中监听 `Battle.BattleStarted` 事件，在回调里 `yield return` Action：
+
+```csharp
+// 需要 using LBoL.Core; （for GameEventArgs）
+protected override void OnEnterBattle(BattleController battle)
+{
+    _turnCounter = 0;
+    ReactBattleEvent(Battle.BattleStarted, OnBattleStarted);
+}
+
+private IEnumerable<BattleAction> OnBattleStarted(GameEventArgs args)
+{
+    yield return new ApplyStatusEffectAction(
+        typeof(MySE), this, level, null, null, null, 0f, false);
+}
+```
+
+`ReactBattleEvent<T>(GameEvent<T>, Func<T, IEnumerable<BattleAction>>)` 是 `Unit` 上的方法，接受任意 `GameEvent<T>`。
+`Battle.BattleStarted` 类型为 `GameEvent<GameEventArgs>`，所以 handler 签名为 `IEnumerable<BattleAction> Method(GameEventArgs args)`。
+
+### InspectDll 注意事项
+
+- 加载路径：`D:\software\steam\steamapps\common\LBoL\LBoL_Data\Managed\`（csproj GameFolder）
+- **错误**：`Parameters.Skip(1)` 对静态方法会跳过真实的第1个参数
+- **正确**：对静态方法用 `Parameters` 直接列出所有参数
